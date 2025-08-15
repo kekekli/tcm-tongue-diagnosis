@@ -3,247 +3,61 @@
     <van-nav-bar
       title="分析结果"
       left-arrow
-      @click-left="goBack"
+      @click-left="$router.back()"
       fixed
       placeholder
-    >
-      <template #right>
-        <van-icon name="share" @click="shareResult" />
-      </template>
-    </van-nav-bar>
+    />
 
     <!-- 加载状态 -->
-    <div v-if="isAnalyzing" class="analyzing-container">
-      <div class="analyzing-content">
-        <van-loading type="spinner" size="40" color="#4CAF50">
-          AI正在分析中...
-        </van-loading>
-        <div class="analyzing-tips">
-          <p>正在运用专业中医理论分析您的舌象</p>
-          <p>预计需要 {{ remainingTime }} 秒</p>
-        </div>
-      </div>
+    <div v-if="isAnalyzing" class="loading-section">
+      <van-loading type="spinner" size="40px" color="#4CAF50">
+        AI正在分析您的舌象...
+      </van-loading>
+      <p class="loading-text">请稍等，大约需要{{ remainingTime }}秒</p>
     </div>
 
     <!-- 分析结果 -->
-    <div v-else-if="analysisResult" class="analysis-content">
+    <div v-else-if="analysisResult" class="result-content">
       <!-- 舌象图片 -->
-      <div class="image-section card">
+      <div class="tongue-image-section">
         <van-image
           :src="tongueImage"
+          width="200"
+          height="200"
           fit="cover"
           round
-          width="120"
-          height="120"
+          class="tongue-image"
         />
-        <div class="image-info">
-          <div class="analysis-date">{{ formatDate(timestamp) }}</div>
-          <div class="image-quality">
-            <van-tag :type="qualityTagType" size="mini">
-              {{ qualityText }}
-            </van-tag>
-          </div>
-        </div>
       </div>
 
-      <!-- 体质分析结果 -->
-      <div class="constitution-section card">
-        <div class="section-title">体质分析</div>
+      <!-- 核心分析结果 -->
+      <div class="analysis-summary card">
+        <h3>分析结果</h3>
         
-        <div class="main-constitution">
-          <div class="constitution-header">
-            <h3>{{ mainConstitution.name }}</h3>
-            <div class="constitution-percentage">
-              {{ mainConstitution.percentage }}%
-            </div>
-          </div>
-          <p class="constitution-desc">{{ mainConstitution.description }}</p>
-          
-          <!-- 体质特征 -->
-          <div class="characteristics">
-            <div class="characteristics-title">主要特征</div>
-            <div class="characteristics-tags">
-              <van-tag
-                v-for="char in mainConstitution.characteristics"
-                :key="char"
-                type="primary"
-                size="mini"
-                plain
-              >
-                {{ char }}
-              </van-tag>
-            </div>
-          </div>
+        <div class="result-item">
+          <div class="result-label">舌质特征</div>
+          <div class="result-value">{{ analysisResult.tongueBody.color }} · {{ analysisResult.tongueBody.texture }}</div>
         </div>
-
-        <!-- 体质分布雷达图 -->
-        <div class="constitution-chart">
-          <ConstitutionRadar :data="constitutionChartData" />
-        </div>
-
-        <!-- 其他体质倾向 -->
-        <div v-if="otherConstitutions.length > 0" class="other-constitutions">
-          <div class="other-title">其他体质倾向</div>
-          <div class="other-list">
-            <div
-              v-for="constitution in otherConstitutions"
-              :key="constitution.type"
-              class="other-item"
-            >
-              <span>{{ constitution.name }}</span>
-              <span class="other-percentage">{{ constitution.percentage }}%</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 舌象特征分析 -->
-      <div class="tongue-features card">
-        <div class="section-title">舌象特征</div>
         
-        <van-grid :column-num="2" :gutter="12">
-          <van-grid-item>
-            <div class="feature-item">
-              <div class="feature-label">舌质颜色</div>
-              <div class="feature-value">{{ analysisResult.tongueAnalysis.tongueQuality.color }}</div>
-            </div>
-          </van-grid-item>
-          
-          <van-grid-item>
-            <div class="feature-item">
-              <div class="feature-label">舌苔颜色</div>
-              <div class="feature-value">{{ analysisResult.tongueAnalysis.tongueCoating.color }}</div>
-            </div>
-          </van-grid-item>
-          
-          <van-grid-item>
-            <div class="feature-item">
-              <div class="feature-label">舌体厚薄</div>
-              <div class="feature-value">{{ analysisResult.tongueAnalysis.tongueQuality.thickness }}</div>
-            </div>
-          </van-grid-item>
-          
-          <van-grid-item>
-            <div class="feature-item">
-              <div class="feature-label">苔质厚薄</div>
-              <div class="feature-value">{{ analysisResult.tongueAnalysis.tongueCoating.thickness }}</div>
-            </div>
-          </van-grid-item>
-        </van-grid>
-
-        <!-- 异常特征 -->
-        <div class="abnormal-features" v-if="hasAbnormalFeatures">
-          <div class="abnormal-title">发现异常特征</div>
-          <div class="abnormal-list">
-            <van-tag
-              v-if="analysisResult.tongueAnalysis.tongueShape.cracks"
-              type="warning"
-              size="mini"
-            >
-              舌体有裂纹
-            </van-tag>
-            <van-tag
-              v-if="analysisResult.tongueAnalysis.tongueShape.teethMarks"
-              type="warning"
-              size="mini"
-            >
-              有齿痕
-            </van-tag>
-            <van-tag
-              v-if="analysisResult.tongueAnalysis.tongueShape.spots"
-              type="warning"
-              size="mini"
-            >
-              有瘀斑
-            </van-tag>
-          </div>
+        <div class="result-item">
+          <div class="result-label">舌苔情况</div>
+          <div class="result-value">{{ analysisResult.coating.color }} · {{ analysisResult.coating.thickness }}</div>
+        </div>
+        
+        <div class="health-advice">
+          <van-icon name="info-o" color="#4CAF50" />
+          <span>{{ getSimpleAdvice() }}</span>
         </div>
       </div>
 
-      <!-- 健康风险提示 -->
-      <div v-if="analysisResult.healthRisks.length > 0" class="health-risks card">
-        <div class="section-title text-warning">
-          <van-icon name="warning-o" />
-          健康风险提示
-        </div>
-        <van-cell-group inset>
-          <van-cell
-            v-for="risk in analysisResult.healthRisks"
-            :key="risk"
-            :title="risk"
-            icon="info-o"
-          />
-        </van-cell-group>
-      </div>
-
-      <!-- 调理建议 -->
-      <div class="recommendations card">
-        <div class="section-title">调理建议</div>
-        
-        <van-collapse v-model="activeRecommendation">
-          <van-collapse-item title="饮食调理" name="diet">
-            <div class="recommendation-list">
-              <div
-                v-for="item in analysisResult.recommendations.diet"
-                :key="item"
-                class="recommendation-item"
-              >
-                <van-icon name="success" color="#4CAF50" />
-                <span>{{ item }}</span>
-              </div>
-            </div>
-          </van-collapse-item>
-          
-          <van-collapse-item title="生活方式" name="lifestyle">
-            <div class="recommendation-list">
-              <div
-                v-for="item in analysisResult.recommendations.lifestyle"
-                :key="item"
-                class="recommendation-item"
-              >
-                <van-icon name="success" color="#4CAF50" />
-                <span>{{ item }}</span>
-              </div>
-            </div>
-          </van-collapse-item>
-          
-          <van-collapse-item title="运动建议" name="exercise">
-            <div class="recommendation-list">
-              <div
-                v-for="item in analysisResult.recommendations.exercise"
-                :key="item"
-                class="recommendation-item"
-              >
-                <van-icon name="success" color="#4CAF50" />
-                <span>{{ item }}</span>
-              </div>
-            </div>
-          </van-collapse-item>
-          
-          <van-collapse-item title="中药调理" name="herbs">
-            <div class="recommendation-list">
-              <div
-                v-for="item in analysisResult.recommendations.herbs"
-                :key="item"
-                class="recommendation-item"
-              >
-                <van-icon name="success" color="#4CAF50" />
-                <span>{{ item }}</span>
-              </div>
-            </div>
-          </van-collapse-item>
-        </van-collapse>
-      </div>
-
-      <!-- 产品推荐 -->
-      <div v-if="analysisResult.products.length > 0" class="product-recommendations card">
-        <div class="section-title">相关产品推荐</div>
-        
-        <div class="product-list">
+      <!-- 推荐产品 -->
+      <div class="products-section card">
+        <h3>为您推荐</h3>
+        <div class="product-grid">
           <div
-            v-for="product in analysisResult.products"
+            v-for="product in recommendedProducts"
             :key="product.id"
-            class="product-item"
+            class="product-card"
             @click="openProductLink(product.taobaoLink)"
           >
             <van-image
@@ -255,13 +69,8 @@
             />
             <div class="product-info">
               <div class="product-name">{{ product.name }}</div>
-              <div class="product-reason">{{ product.reason }}</div>
-              <div class="product-footer">
-                <span class="product-category">{{ product.category }}</span>
-                <span class="product-price">{{ product.price }}</span>
-              </div>
+              <div class="product-price">¥{{ product.price }}</div>
             </div>
-            <van-icon name="arrow" />
           </div>
         </div>
         
@@ -270,28 +79,16 @@
           size="large"
           round
           block
-          @click="viewMoreProducts"
-          class="view-more-btn"
+          @click="viewAllProducts"
+          class="view-all-btn"
         >
-          <van-icon name="shop-o" />
-          查看更多产品推荐
+          查看更多推荐
         </van-button>
       </div>
 
       <!-- 操作按钮 -->
       <div class="action-buttons">
-        <van-button @click="saveResult" :loading="isSaving">
-          <van-icon name="bookmark-o" />
-          保存结果
-        </van-button>
-        
-        <van-button type="primary" @click="generateReport">
-          <van-icon name="description" />
-          生成报告
-        </van-button>
-        
-        <van-button @click="retakePicture">
-          <van-icon name="camera-o" />
+        <van-button @click="retakePicture" size="large" round>
           重新拍照
         </van-button>
       </div>
@@ -312,115 +109,70 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { Toast } from 'vant'
-import { useDiagnosisStore } from '@/stores/diagnosis'
-import { analyzeTongueImage, generateAnalysisReport } from '@/utils/analysis'
-import { formatDate } from '@/utils/date'
-import ConstitutionRadar from '@/components/Charts/ConstitutionRadar.vue'
+import { analyzeTongueImage } from '@/utils/analysis'
 import type { AnalysisResult } from '@/types/diagnosis'
 
 const router = useRouter()
 const route = useRoute()
-const diagnosisStore = useDiagnosisStore()
 
 const isAnalyzing = ref(false)
+const remainingTime = ref(5)
 const analysisResult = ref<AnalysisResult | null>(null)
 const tongueImage = ref('')
-const timestamp = ref(Date.now())
 const error = ref('')
-const isSaving = ref(false)
-const activeRecommendation = ref(['diet'])
-const remainingTime = ref(5)
 
-const mainConstitution = computed(() => {
-  return analysisResult.value?.constitution[0]
-})
-
-const otherConstitutions = computed(() => {
-  return analysisResult.value?.constitution.slice(1) || []
-})
-
-const constitutionChartData = computed(() => {
+const recommendedProducts = computed(() => {
   if (!analysisResult.value) return []
+  return analysisResult.value.products.slice(0, 3)
+})
+
+const getSimpleAdvice = (): string => {
+  if (!analysisResult.value) return ''
   
-  return analysisResult.value.constitution.map(c => ({
-    label: c.name,
-    value: c.percentage
-  }))
-})
-
-const hasAbnormalFeatures = computed(() => {
-  if (!analysisResult.value) return false
+  const constitution = analysisResult.value.constitution.primary
   
-  const shape = analysisResult.value.tongueAnalysis.tongueShape
-  return shape.cracks || shape.teethMarks || shape.spots
-})
-
-const qualityTagType = computed(() => {
-  // 这里可以根据图片质量返回不同的标签类型
-  return 'success' // 'success' | 'primary' | 'warning' | 'danger'
-})
-
-const qualityText = computed(() => {
-  return '图片质量良好'
-})
-
-const goBack = () => {
-  router.back()
+  const adviceMap = {
+    '气虚质': '建议多休息，适当补气养血',
+    '阳虚质': '注意保暖，可适当温补',
+    '阴虚质': '宜滋阴润燥，避免熬夜',
+    '痰湿质': '饮食清淡，加强运动',
+    '湿热质': '清热利湿，少食辛辣',
+    '血瘀质': '活血化瘀，保持心情舒畅',
+    '气郁质': '疏肝理气，多做运动',
+    '特禀质': '避免过敏原，增强体质',
+    '平和质': '保持良好生活习惯'
+  }
+  
+  return adviceMap[constitution] || '建议咨询专业中医师'
 }
 
-const shareResult = () => {
-  if (navigator.share && analysisResult.value) {
-    const report = generateAnalysisReport(analysisResult.value)
-    navigator.share({
-      title: '我的舌诊分析结果',
-      text: report,
-      url: window.location.href
-    })
-  } else {
-    Toast.success('已复制分析结果到剪贴板')
+const openProductLink = (link: string) => {
+  if (link) {
+    // 尝试打开淘宝app
+    const taobaoAppLink = link.replace('https://', 'taobao://')
+    
+    const linkEl = document.createElement('a')
+    linkEl.href = taobaoAppLink
+    linkEl.style.display = 'none'
+    document.body.appendChild(linkEl)
+    linkEl.click()
+    document.body.removeChild(linkEl)
+    
+    // 延迟后打开网页版
+    setTimeout(() => {
+      window.open(link, '_blank')
+    }, 1000)
+    
+    Toast.success('正在跳转到购买页面...')
   }
 }
 
-const saveResult = async () => {
-  if (!analysisResult.value) return
-  
-  try {
-    isSaving.value = true
-    
-    const record = {
-      id: Date.now().toString(),
-      timestamp: timestamp.value,
-      imageUrl: tongueImage.value,
-      analysis: analysisResult.value
-    }
-    
-    diagnosisStore.addDiagnosisRecord(record)
-    Toast.success('分析结果已保存')
-  } catch (error) {
-    console.error('保存失败:', error)
-    Toast.fail('保存失败，请重试')
-  } finally {
-    isSaving.value = false
-  }
-}
-
-const generateReport = () => {
-  router.push({
-    name: 'Reports',
-    query: { from: 'analysis', id: route.params.id }
-  })
+const viewAllProducts = () => {
+  router.push('/products')
 }
 
 const retakePicture = () => {
   router.push('/camera')
-}
-
-const openProductLink = (link: string) => {
-  window.open(link, '_blank')
-}
-
-const viewMoreProducts = () => {
-  router.push('/products')
 }
 
 const retryAnalysis = () => {
@@ -457,7 +209,6 @@ const startAnalysis = async () => {
     })
     
     analysisResult.value = result
-    diagnosisStore.setCurrentAnalysis(result)
     
     clearInterval(timer)
   } catch (err) {
@@ -469,18 +220,7 @@ const startAnalysis = async () => {
 }
 
 onMounted(() => {
-  // 检查是否有现有的分析结果
-  if (diagnosisStore.currentAnalysis) {
-    analysisResult.value = diagnosisStore.currentAnalysis
-    // 尝试获取图片
-    const imageId = route.params.id as string
-    const imageUrl = route.query.imageUrl as string || localStorage.getItem(`tcm-image-${imageId}`)
-    if (imageUrl) {
-      tongueImage.value = imageUrl
-    }
-  } else {
-    startAnalysis()
-  }
+  startAnalysis()
 })
 </script>
 
@@ -488,203 +228,96 @@ onMounted(() => {
 .analysis-page {
   min-height: 100vh;
   background: #f8f9fa;
-  padding-bottom: 80px;
 }
 
-.analyzing-container {
+.loading-section {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 60vh;
+  padding: 40px 20px;
 }
 
-.analyzing-content {
-  text-align: center;
-}
-
-.analyzing-tips {
-  margin-top: 24px;
-  color: #666;
-  line-height: 1.6;
-}
-
-.analyzing-tips p {
-  margin: 8px 0;
-}
-
-.analysis-content {
-  padding: 16px;
-}
-
-.image-section {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 16px;
-}
-
-.image-info {
-  flex: 1;
-}
-
-.analysis-date {
-  font-size: 16px;
-  font-weight: 500;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.constitution-section {
-  margin-bottom: 16px;
-}
-
-.main-constitution {
-  margin-bottom: 24px;
-}
-
-.constitution-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.constitution-header h3 {
-  margin: 0;
-  font-size: 20px;
-  color: #4CAF50;
-}
-
-.constitution-percentage {
-  font-size: 18px;
-  font-weight: 600;
-  color: #4CAF50;
-  background: rgba(76, 175, 80, 0.1);
-  padding: 4px 12px;
-  border-radius: 20px;
-}
-
-.constitution-desc {
-  margin: 0 0 16px 0;
-  color: #666;
-  line-height: 1.6;
-}
-
-.characteristics-title {
-  font-weight: 500;
-  margin-bottom: 8px;
-  color: #333;
-}
-
-.characteristics-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.constitution-chart {
-  margin: 24px 0;
-}
-
-.other-constitutions {
-  border-top: 1px solid #eee;
-  padding-top: 16px;
-}
-
-.other-title {
-  font-weight: 500;
-  margin-bottom: 12px;
-  color: #333;
-}
-
-.other-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.other-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 0;
-}
-
-.other-percentage {
+.loading-text {
+  margin-top: 16px;
   color: #666;
   font-size: 14px;
 }
 
-.tongue-features {
-  margin-bottom: 16px;
+.result-content {
+  padding: 20px;
 }
 
-.feature-item {
+.tongue-image-section {
   text-align: center;
-  padding: 12px;
+  margin-bottom: 24px;
 }
 
-.feature-label {
-  font-size: 12px;
+.tongue-image {
+  border: 3px solid #4CAF50;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.analysis-summary h3,
+.products-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.result-item:last-of-type {
+  border-bottom: none;
+}
+
+.result-label {
+  font-size: 14px;
   color: #666;
-  margin-bottom: 4px;
 }
 
-.feature-value {
+.result-value {
   font-size: 16px;
   font-weight: 500;
   color: #333;
 }
 
-.abnormal-features {
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid #eee;
-}
-
-.abnormal-title {
-  font-weight: 500;
-  margin-bottom: 8px;
-  color: #e6a23c;
-}
-
-.abnormal-list {
+.health-advice {
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
   gap: 8px;
+  margin-top: 16px;
+  padding: 12px;
+  background: rgba(76, 175, 80, 0.1);
+  border-radius: 8px;
+  font-size: 14px;
+  color: #4CAF50;
+  line-height: 1.5;
 }
 
-.health-risks {
-  margin-bottom: 16px;
-}
-
-.recommendations {
-  margin-bottom: 16px;
-}
-
-.recommendation-list {
+.product-grid {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-bottom: 20px;
 }
 
-.recommendation-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-}
-
-.product-recommendations {
-  margin-bottom: 16px;
-}
-
-.product-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.product-item {
+.product-card {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -695,7 +328,7 @@ onMounted(() => {
   transition: background-color 0.2s ease;
 }
 
-.product-item:active {
+.product-card:active {
   background: #f0f0f0;
 }
 
@@ -704,48 +337,24 @@ onMounted(() => {
 }
 
 .product-name {
+  font-size: 14px;
   font-weight: 500;
   color: #333;
   margin-bottom: 4px;
 }
 
-.product-reason {
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 8px;
-}
-
-.product-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.product-category {
-  font-size: 12px;
-  color: #999;
-}
-
 .product-price {
-  font-weight: 500;
-  color: #f56c6c;
+  font-size: 16px;
+  font-weight: 600;
+  color: #ff6034;
 }
 
-.view-more-btn {
-  margin-top: 16px;
+.view-all-btn {
+  margin-top: 8px;
 }
 
 .action-buttons {
-  display: flex;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-.action-buttons .van-button {
-  flex: 1;
-}
-
-.text-warning {
-  color: #e6a23c;
+  text-align: center;
+  margin-top: 20px;
 }
 </style>

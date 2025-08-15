@@ -6,7 +6,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/',
     name: 'Home',
     component: () => import('@/views/Home/index.vue'),
-    meta: { title: '首页', keepAlive: true }
+    meta: { title: '舌诊助手', keepAlive: true }
   },
   {
     path: '/camera',
@@ -19,36 +19,6 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Analysis',
     component: () => import('@/views/Analysis/index.vue'),
     meta: { title: '分析结果', keepAlive: false }
-  },
-  {
-    path: '/knowledge',
-    name: 'Knowledge',
-    component: () => import('@/views/Knowledge/index.vue'),
-    meta: { title: '舌诊知识库', keepAlive: true }
-  },
-  {
-    path: '/reports',
-    name: 'Reports',
-    component: () => import('@/views/Reports/index.vue'),
-    meta: { title: '健康报告', keepAlive: true }
-  },
-  {
-    path: '/history',
-    name: 'History',
-    component: () => import('@/views/History/index.vue'),
-    meta: { title: '历史记录', keepAlive: true }
-  },
-  {
-    path: '/profile',
-    name: 'Profile',
-    component: () => import('@/views/Profile/index.vue'),
-    meta: { title: '个人中心', keepAlive: true }
-  },
-  {
-    path: '/constitution-test',
-    name: 'ConstitutionTest',
-    component: () => import('@/views/ConstitutionTest/index.vue'),
-    meta: { title: '体质测试', keepAlive: false }
   },
   {
     path: '/products',

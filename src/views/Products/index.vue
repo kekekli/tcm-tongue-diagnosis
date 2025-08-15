@@ -1,177 +1,139 @@
 <template>
   <div class="products-page">
     <van-nav-bar
-      title="产品推荐"
+      title="精选推荐"
       left-arrow
       @click-left="$router.back()"
       fixed
       placeholder
-    >
-      <template #right>
-        <van-icon name="search" @click="showSearch = true" />
-      </template>
-    </van-nav-bar>
+    />
 
     <div class="content">
-      <!-- 顶部推荐横幅 -->
-      <div class="banner-section">
-        <div class="banner-card">
-          <div class="banner-content">
-            <div class="banner-text">
-              <h3>个性化产品推荐</h3>
-              <p>基于您的舌诊结果和体质类型，为您精选适合的中医养生产品</p>
-            </div>
-            <div class="banner-image">
-              <van-icon name="shop-o" size="48" color="#4CAF50" />
-            </div>
-          </div>
-          <div class="discount-info">
-            <van-icon name="gift-o" color="#ff6034" />
-            <span>{{ productData.discountInfo.description }}</span>
+      <!-- 推荐说明 -->
+      <div class="intro-section">
+        <div class="intro-card">
+          <h3>为您精心挑选</h3>
+          <p>基于舌诊分析结果，推荐适合您体质的优质产品</p>
+          <div class="discount-tag">
+            <van-icon name="gift-o" />
+            <span>限时优惠 8-9折</span>
           </div>
         </div>
       </div>
 
-      <!-- 分类导航 -->
-      <div class="category-section">
-        <van-tabs 
-          v-model:active="activeCategory" 
-          sticky
-          offset-top="46"
-          swipeable
-          animated
-        >
-          <van-tab 
-            v-for="category in categories" 
-            :key="category.id" 
-            :title="category.name"
-            :name="category.id"
+      <!-- 精选产品列表 -->
+      <div class="products-section">
+        <div class="section-title">
+          <van-icon name="fire-o" color="#ff6034" />
+          <span>热门推荐</span>
+        </div>
+        
+        <div class="products-list">
+          <div
+            v-for="product in featuredProducts"
+            :key="product.id"
+            class="product-item"
+            @click="viewProduct(product)"
           >
-            <div class="category-content">
-              <!-- 热门推荐 -->
-              <div v-if="category.id === 'all'" class="hot-products">
-                <div class="section-title">
-                  <van-icon name="fire-o" color="#ff6034" />
-                  <span>热门推荐</span>
-                </div>
-                <div class="hot-list">
-                  <ProductCard
-                    v-for="product in hotProducts"
-                    :key="product.id"
-                    :product="product"
-                    @click="viewProduct(product)"
+            <van-image
+              :src="product.image"
+              width="80"
+              height="80"
+              fit="cover"
+              round
+              class="product-image"
+            />
+            
+            <div class="product-info">
+              <h4 class="product-name">{{ product.name }}</h4>
+              <p class="product-reason">{{ product.reason }}</p>
+              
+              <div class="product-meta">
+                <div class="rating">
+                  <van-rate
+                    v-model="product.rating"
+                    :size="12"
+                    color="#ff6034"
+                    void-color="#eee"
+                    readonly
                   />
+                  <span class="rating-text">{{ product.rating }}</span>
                 </div>
+                <div class="sales">{{ product.salesCount }}人购买</div>
               </div>
-
-              <!-- 体质推荐 -->
-              <div v-if="category.id === 'all'" class="constitution-recommendations">
-                <div class="section-title">
-                  <van-icon name="user-o" color="#4CAF50" />
-                  <span>基于您的体质推荐</span>
-                </div>
-                <div v-if="userConstitution" class="constitution-banner">
-                  <div class="constitution-info">
-                    <span class="constitution-name">{{ userConstitution.name }}</span>
-                    <span class="constitution-desc">{{ userConstitution.description }}</span>
-                  </div>
-                  <van-button size="small" type="primary" plain @click="viewConstitutionProducts">
-                    查看推荐
-                  </van-button>
-                </div>
-                <div v-else class="no-constitution">
-                  <p>完成体质测试，获得个性化产品推荐</p>
-                  <van-button size="small" type="primary" @click="goToConstitutionTest">
-                    立即测试
-                  </van-button>
-                </div>
-              </div>
-
-              <!-- 分类产品列表 -->
-              <div class="products-grid">
-                <ProductCard
-                  v-for="product in getProductsByCategory(category.id)"
-                  :key="product.id"
-                  :product="product"
-                  @click="viewProduct(product)"
-                />
-              </div>
-
-              <!-- 空状态 -->
-              <div v-if="getProductsByCategory(category.id).length === 0" class="empty-state">
-                <van-empty description="暂无相关产品" />
+              
+              <div class="price-section">
+                <span class="price-current">¥{{ product.price }}</span>
+                <span v-if="product.originalPrice" class="price-original">
+                  ¥{{ product.originalPrice }}
+                </span>
               </div>
             </div>
-          </van-tab>
-        </van-tabs>
+            
+            <van-button
+              type="primary"
+              size="small"
+              round
+              @click.stop="buyNow(product)"
+            >
+              立即购买
+            </van-button>
+          </div>
+        </div>
       </div>
     </div>
 
     <!-- 产品详情弹窗 -->
     <van-popup
       v-model:show="showProductDetail"
-      position="right"
-      :style="{ width: '100%', height: '100%' }"
+      position="bottom"
+      :style="{ height: '80%' }"
+      round
     >
-      <ProductDetail
-        v-if="selectedProduct"
-        :product="selectedProduct"
-        :related-products="getRelatedProducts(selectedProduct)"
-        @close="showProductDetail = false"
-        @view-related="viewProduct"
-      />
-    </van-popup>
-
-    <!-- 品牌展示 -->
-    <div class="brands-section">
-      <div class="section-title">
-        <van-icon name="medal-o" color="#4CAF50" />
-        <span>合作品牌</span>
-      </div>
-      <div class="brands-list">
-        <div 
-          v-for="brand in productData.brands" 
-          :key="brand.id"
-          class="brand-item"
-        >
-          <div class="brand-logo">
-            <van-image
-              :src="brand.logo"
-              width="60"
-              height="40"
-              fit="contain"
-              :show-error="false"
-              :show-loading="false"
-            />
-          </div>
-          <div class="brand-info">
-            <div class="brand-name">{{ brand.name }}</div>
-            <div class="brand-desc">{{ brand.description }}</div>
-          </div>
+      <div v-if="selectedProduct" class="product-detail">
+        <div class="detail-header">
+          <h3>{{ selectedProduct.name }}</h3>
+          <van-icon name="cross" @click="showProductDetail = false" />
         </div>
-      </div>
-    </div>
-
-    <!-- 搜索弹窗 -->
-    <van-popup v-model:show="showSearch" position="top">
-      <div class="search-container">
-        <van-search
-          v-model="searchKeyword"
-          placeholder="搜索产品名称或功效"
-          @search="onSearch"
-          @cancel="showSearch = false"
-          show-action
-        />
-        <div v-if="searchResults.length > 0" class="search-results">
-          <ProductCard
-            v-for="product in searchResults"
-            :key="product.id"
-            :product="product"
-            @click="viewProduct(product)"
+        
+        <div class="detail-content">
+          <van-image
+            :src="selectedProduct.image"
+            width="100%"
+            height="200"
+            fit="contain"
+            class="detail-image"
           />
-        </div>
-        <div v-else-if="searchKeyword" class="no-results">
-          <van-empty description="未找到相关产品" />
+          
+          <div class="detail-info">
+            <p class="product-desc">{{ selectedProduct.description }}</p>
+            
+            <div class="specs">
+              <h4>产品规格</h4>
+              <div
+                v-for="spec in selectedProduct.specifications"
+                :key="spec"
+                class="spec-item"
+              >
+                <van-icon name="success" color="#4CAF50" size="14" />
+                <span>{{ spec }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="detail-actions">
+            <div class="price-info">
+              <span class="price">¥{{ selectedProduct.price }}</span>
+            </div>
+            <van-button
+              type="primary"
+              size="large"
+              round
+              @click="buyNow(selectedProduct)"
+            >
+              立即购买
+            </van-button>
+          </div>
         </div>
       </div>
     </van-popup>
@@ -179,11 +141,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
 import { Toast } from 'vant'
-import ProductCard from '@/components/Products/ProductCard.vue'
-import ProductDetail from '@/components/Products/ProductDetail.vue'
 import productData from '@/data/products.json'
 
 interface Product {
@@ -203,139 +162,56 @@ interface Product {
   specifications: string[]
 }
 
-interface Constitution {
-  name: string
-  description: string
-  type: string
-}
-
-const router = useRouter()
-
-const activeCategory = ref('all')
 const showProductDetail = ref(false)
 const selectedProduct = ref<Product | null>(null)
-const showSearch = ref(false)
-const searchKeyword = ref('')
-const userConstitution = ref<Constitution | null>(null)
 
-const categories = computed(() => [
-  { id: 'all', name: '全部' },
-  ...productData.categories
-])
-
-const hotProducts = computed(() => productData.hotProducts)
-
-const searchResults = computed(() => {
-  if (!searchKeyword.value) return []
-  
-  const keyword = searchKeyword.value.toLowerCase()
-  const allProducts = getAllProducts()
-  
-  return allProducts.filter(product => 
-    product.name.toLowerCase().includes(keyword) ||
-    product.reason.toLowerCase().includes(keyword) ||
-    product.description.toLowerCase().includes(keyword) ||
-    product.tags.some(tag => tag.toLowerCase().includes(keyword))
-  )
-})
-
-const getAllProducts = (): Product[] => {
+// 精选推荐产品（热门+各体质精选）
+const featuredProducts = computed(() => {
   const products: Product[] = []
   
   // 添加热门产品
   products.push(...productData.hotProducts)
   
-  // 添加各体质产品
+  // 从各体质产品中选择排名前2的
   Object.values(productData.products).forEach(categoryProducts => {
-    products.push(...categoryProducts)
+    products.push(...categoryProducts.slice(0, 2))
   })
   
-  // 去重
+  // 去重并限制数量
   const uniqueProducts = products.filter((product, index, self) => 
     index === self.findIndex(p => p.id === product.id)
   )
   
-  return uniqueProducts
-}
-
-const getProductsByCategory = (categoryId: string): Product[] => {
-  if (categoryId === 'all') {
-    return getAllProducts()
-  }
-  
-  const allProducts = getAllProducts()
-  return allProducts.filter(product => product.category === categoryId)
-}
-
-const getRelatedProducts = (product: Product): Product[] => {
-  const allProducts = getAllProducts()
-  return allProducts
-    .filter(p => p.id !== product.id && p.category === product.category)
-    .slice(0, 4)
-}
+  return uniqueProducts.slice(0, 8) // 限制显示8个产品
+})
 
 const viewProduct = (product: Product) => {
   selectedProduct.value = product
   showProductDetail.value = true
-  showSearch.value = false
 }
 
-const viewConstitutionProducts = () => {
-  if (!userConstitution.value) return
-  
-  // 跳转到对应体质的产品页面
-  const constitutionProducts = productData.products[userConstitution.value.type as keyof typeof productData.products] || []
-  
-  if (constitutionProducts.length > 0) {
-    viewProduct(constitutionProducts[0])
-  } else {
-    Toast('暂无该体质的推荐产品')
-  }
-}
-
-const goToConstitutionTest = () => {
-  router.push('/constitution-test')
-}
-
-const onSearch = () => {
-  if (!searchKeyword.value.trim()) {
-    Toast('请输入搜索关键词')
-    return
-  }
-  
-  // 搜索逻辑已在 computed 中实现
-  if (searchResults.value.length === 0) {
-    Toast('未找到相关产品')
-  }
-}
-
-const loadUserConstitution = () => {
-  try {
-    // 从体质测试结果中获取用户主要体质
-    const savedTests = JSON.parse(
-      localStorage.getItem('tcm-constitution-tests') || '[]'
-    )
+const buyNow = (product: Product) => {
+  if (product.taobaoLink) {
+    // 尝试打开淘宝app
+    const taobaoAppLink = product.taobaoLink.replace('https://', 'taobao://')
     
-    if (savedTests.length > 0) {
-      const latestTest = savedTests[0]
-      const mainResult = latestTest.results[0]
-      
-      if (mainResult) {
-        userConstitution.value = {
-          name: mainResult.name,
-          description: mainResult.description,
-          type: mainResult.type
-        }
-      }
-    }
-  } catch (error) {
-    console.error('加载用户体质信息失败:', error)
+    const link = document.createElement('a')
+    link.href = taobaoAppLink
+    link.style.display = 'none'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    
+    // 延迟后打开网页版
+    setTimeout(() => {
+      window.open(product.taobaoLink, '_blank')
+    }, 1000)
+    
+    Toast.success('正在跳转到购买页面...')
+  } else {
+    Toast.fail('购买链接暂不可用')
   }
 }
-
-onMounted(() => {
-  loadUserConstitution()
-})
 </script>
 
 <style scoped>
@@ -345,65 +221,41 @@ onMounted(() => {
 }
 
 .content {
-  padding-bottom: 20px;
-}
-
-.banner-section {
   padding: 16px;
 }
 
-.banner-card {
-  background: linear-gradient(135deg, #4CAF50, #66BB6A);
-  border-radius: 16px;
-  padding: 20px;
+.intro-section {
+  margin-bottom: 20px;
+}
+
+.intro-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
 }
 
-.banner-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.banner-text {
-  flex: 1;
-}
-
-.banner-text h3 {
+.intro-card h3 {
   margin: 0 0 8px 0;
   font-size: 20px;
   font-weight: 600;
 }
 
-.banner-text p {
-  margin: 0;
+.intro-card p {
+  margin: 0 0 16px 0;
   font-size: 14px;
   opacity: 0.9;
-  line-height: 1.5;
 }
 
-.banner-image {
-  flex-shrink: 0;
-  margin-left: 16px;
-}
-
-.discount-info {
-  display: flex;
+.discount-tag {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 12px;
+  gap: 4px;
   background: rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
   border-radius: 20px;
-  font-size: 13px;
-}
-
-.category-section {
-  background: white;
-}
-
-.category-content {
-  padding: 16px;
+  font-size: 12px;
 }
 
 .section-title {
@@ -416,135 +268,163 @@ onMounted(() => {
   color: #333;
 }
 
-.hot-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 12px;
-  margin-bottom: 32px;
-}
-
-.constitution-recommendations {
-  margin-bottom: 32px;
-}
-
-.constitution-banner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px;
-  background: rgba(76, 175, 80, 0.1);
-  border-radius: 12px;
-  border-left: 4px solid #4CAF50;
-  margin-bottom: 16px;
-}
-
-.constitution-info {
-  flex: 1;
-}
-
-.constitution-name {
-  display: block;
-  font-size: 16px;
-  font-weight: 600;
-  color: #4CAF50;
-  margin-bottom: 4px;
-}
-
-.constitution-desc {
-  font-size: 12px;
-  color: #666;
-  line-height: 1.4;
-}
-
-.no-constitution {
-  text-align: center;
-  padding: 24px;
-  background: #f9f9f9;
-  border-radius: 12px;
-  margin-bottom: 16px;
-}
-
-.no-constitution p {
-  margin: 0 0 12px 0;
-  color: #666;
-  font-size: 14px;
-}
-
-.products-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 12px;
-}
-
-.empty-state {
-  padding: 40px 20px;
-  text-align: center;
-}
-
-.brands-section {
-  padding: 16px;
-  background: white;
-  margin-top: 8px;
-}
-
-.brands-list {
+.products-list {
   display: flex;
   flex-direction: column;
   gap: 16px;
 }
 
-.brand-item {
+.product-item {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px;
-  background: #f9f9f9;
-  border-radius: 12px;
-}
-
-.brand-logo {
-  flex-shrink: 0;
-  width: 80px;
-  height: 60px;
+  gap: 12px;
   background: white;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-.brand-info {
+.product-item:active {
+  transform: scale(0.98);
+}
+
+.product-info {
   flex: 1;
+  min-width: 0;
 }
 
-.brand-name {
+.product-name {
+  margin: 0 0 4px 0;
   font-size: 16px;
   font-weight: 600;
   color: #333;
-  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.brand-desc {
+.product-reason {
+  margin: 0 0 8px 0;
   font-size: 12px;
-  color: #666;
+  color: #4CAF50;
   line-height: 1.4;
 }
 
-.search-container {
-  padding: 16px;
-  max-height: 80vh;
+.product-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.rating-text {
+  font-size: 12px;
+  color: #333;
+}
+
+.sales {
+  font-size: 11px;
+  color: #999;
+}
+
+.price-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-current {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ff6034;
+}
+
+.price-original {
+  font-size: 12px;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.product-detail {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.detail-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.detail-content {
+  flex: 1;
+  padding: 20px;
   overflow-y: auto;
 }
 
-.search-results {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 12px;
-  margin-top: 16px;
+.detail-image {
+  margin-bottom: 20px;
+  border-radius: 8px;
 }
 
-.no-results {
-  padding: 40px 20px;
-  text-align: center;
+.product-desc {
+  margin: 0 0 20px 0;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.specs h4 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.spec-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.detail-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-top: 1px solid #f0f0f0;
+  background: white;
+}
+
+.price {
+  font-size: 24px;
+  font-weight: 600;
+  color: #ff6034;
+}
+
+.detail-actions .van-button {
+  flex: 1;
+  margin-left: 16px;
 }
 </style>

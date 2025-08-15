@@ -1,7 +1,7 @@
 {
   "name": "tcm-tongue-diagnosis",
   "version": "1.0.0",
-  "description": "中医舌诊H5移动端应用",
+  "description": "极简中医舌诊MVP - 拍照+分析+推荐",
   "main": "index.html",
   "scripts": {
     "dev": "vite",
@@ -11,15 +11,10 @@
     "format": "prettier --write src/**/*.{js,vue,ts,html,css}"
   },
   "dependencies": {
-    "axios": "^1.6.0",
-    "chart.js": "^4.4.0",
     "dayjs": "^1.11.0",
-    "html2canvas": "^1.4.0",
-    "jspdf": "^2.5.0",
     "pinia": "^2.1.0",
     "vant": "^4.8.0",
     "vue": "^3.4.0",
-    "vue-chartjs": "^5.3.0",
     "vue-router": "^4.2.0"
   },
   "devDependencies": {
