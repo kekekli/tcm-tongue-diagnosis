@@ -1,0 +1,390 @@
+{
+  "categories": [
+    {
+      "id": "herbs",
+      "name": "中药材",
+      "icon": "shop-o"
+    },
+    {
+      "id": "health_food",
+      "name": "保健食品",
+      "icon": "gift-o"
+    },
+    {
+      "id": "tea",
+      "name": "养生茶",
+      "icon": "coffee-cup-o"
+    },
+    {
+      "id": "supplements",
+      "name": "营养补品",
+      "icon": "medal-o"
+    }
+  ],
+  "products": {
+    "qi_xu": [
+      {
+        "id": "qx_001",
+        "name": "黄芪片",
+        "category": "herbs",
+        "price": "28.80",
+        "originalPrice": "36.00",
+        "reason": "补气健脾，提升免疫力",
+        "description": "选用优质黄芪，传统工艺制作，适合气虚体质调理",
+        "rating": 4.8,
+        "salesCount": "1.2万+",
+        "shopName": "同仁堂官方旗舰店",
+        "taobaoLink": "https://s.taobao.com/search?q=黄芪片+同仁堂",
+        "image": "/src/assets/products/huangqi.jpg",
+        "tags": ["补气", "健脾", "免疫力"],
+        "specifications": [
+          "规格：0.4g×100片",
+          "用法：口服，一次4-6片，一日2次",
+          "贮藏：密封，置干燥处"
+        ]
+      },
+      {
+        "id": "qx_002",
+        "name": "红枣枸杞茶",
+        "category": "tea",
+        "price": "45.00",
+        "originalPrice": "58.00",
+        "reason": "益气补血，滋养身体",
+        "description": "精选新疆大枣和宁夏枸杞，天然无添加",
+        "rating": 4.9,
+        "salesCount": "8600+",
+        "shopName": "养生堂官方店",
+        "taobaoLink": "https://s.taobao.com/search?q=红枣枸杞茶+养生堂",
+        "image": "/src/assets/products/jujube-tea.jpg",
+        "tags": ["益气", "补血", "养颜"],
+        "specifications": [
+          "规格：5g×30包",
+          "成分：红枣、枸杞子、茯苓",
+          "用法：开水冲泡5-8分钟即可饮用"
+        ]
+      },
+      {
+        "id": "qx_003",
+        "name": "党参蜜丸",
+        "category": "supplements",
+        "price": "32.50",
+        "originalPrice": "42.00",
+        "reason": "补中益气，健脾益肺",
+        "description": "优质党参配制，蜜丸剂型易吸收",
+        "rating": 4.7,
+        "salesCount": "5400+",
+        "shopName": "九芝堂旗舰店",
+        "taobaoLink": "https://s.taobao.com/search?q=党参蜜丸+九芝堂",
+        "image": "/src/assets/products/dangshen.jpg",
+        "tags": ["补气", "健脾", "益肺"],
+        "specifications": [
+          "规格：9g×10丸",
+          "主要成分：党参、蜂蜜",
+          "用法：口服，一次1丸，一日2次"
+        ]
+      }
+    ],
+    "yang_xu": [
+      {
+        "id": "yx_001",
+        "name": "金匮肾气丸",
+        "category": "herbs",
+        "price": "35.60",
+        "originalPrice": "45.00",
+        "reason": "温肾助阳，化气行水",
+        "description": "经典方剂，适合阳虚体质调理",
+        "rating": 4.8,
+        "salesCount": "9800+",
+        "shopName": "同仁堂官方旗舰店",
+        "taobaoLink": "https://s.taobao.com/search?q=金匮肾气丸+同仁堂",
+        "image": "/src/assets/products/jingui.jpg",
+        "tags": ["温肾", "助阳", "化气"],
+        "specifications": [
+          "规格：9g×10丸",
+          "成分：地黄、山药、山茱萸等",
+          "用法：口服，一次1丸，一日2次"
+        ]
+      },
+      {
+        "id": "yx_002",
+        "name": "鹿茸片",
+        "category": "supplements",
+        "price": "128.00",
+        "originalPrice": "168.00",
+        "reason": "补肾阳，益精血，强筋骨",
+        "description": "东北优质鹿茸，传统切片工艺",
+        "rating": 4.9,
+        "salesCount": "2100+",
+        "shopName": "长白山特产店",
+        "taobaoLink": "https://s.taobao.com/search?q=鹿茸片+长白山",
+        "image": "/src/assets/products/lurong.jpg",
+        "tags": ["补肾阳", "益精血", "强筋骨"],
+        "specifications": [
+          "规格：50g装",
+          "产地：东北长白山",
+          "用法：泡酒或炖汤食用"
+        ]
+      }
+    ],
+    "yin_xu": [
+      {
+        "id": "yx_001",
+        "name": "六味地黄丸",
+        "category": "herbs",
+        "price": "22.80",
+        "originalPrice": "28.00",
+        "reason": "滋阴补肾，适合阴虚体质",
+        "description": "经典滋阴方剂，历史悠久",
+        "rating": 4.8,
+        "salesCount": "1.5万+",
+        "shopName": "同仁堂官方旗舰店",
+        "taobaoLink": "https://s.taobao.com/search?q=六味地黄丸+同仁堂",
+        "image": "/src/assets/products/liuwei.jpg",
+        "tags": ["滋阴", "补肾", "调理"],
+        "specifications": [
+          "规格：9g×10丸",
+          "成分：熟地黄、山茱萸、牡丹皮等",
+          "用法：口服，一次1丸，一日2次"
+        ]
+      },
+      {
+        "id": "yx_002",
+        "name": "西洋参片",
+        "category": "supplements",
+        "price": "88.00",
+        "originalPrice": "118.00",
+        "reason": "补气养阴，清热生津",
+        "description": "进口西洋参，品质保证",
+        "rating": 4.9,
+        "salesCount": "6700+",
+        "shopName": "康美药业旗舰店",
+        "taobaoLink": "https://s.taobao.com/search?q=西洋参片+康美",
+        "image": "/src/assets/products/xiyangshen.jpg",
+        "tags": ["补气", "养阴", "清热"],
+        "specifications": [
+          "规格：50g装",
+          "产地：美国/加拿大",
+          "用法：泡水饮用或直接含服"
+        ]
+      }
+    ],
+    "tan_shi": [
+      {
+        "id": "ts_001",
+        "name": "陈皮茯苓茶",
+        "category": "tea",
+        "price": "38.00",
+        "originalPrice": "48.00",
+        "reason": "化痰湿，健脾胃",
+        "description": "新会陈皮配云南茯苓，祛湿化痰",
+        "rating": 4.7,
+        "salesCount": "4200+",
+        "shopName": "新会陈皮专营店",
+        "taobaoLink": "https://s.taobao.com/search?q=陈皮茯苓茶+新会",
+        "image": "/src/assets/products/chenpi-tea.jpg",
+        "tags": ["化痰", "祛湿", "健脾"],
+        "specifications": [
+          "规格：5g×20包",
+          "成分：新会陈皮、茯苓、薏米",
+          "用法：热水冲泡10分钟饮用"
+        ]
+      },
+      {
+        "id": "ts_002",
+        "name": "薏米红豆粉",
+        "category": "health_food",
+        "price": "28.50",
+        "originalPrice": "38.00",
+        "reason": "祛湿消肿，健脾益胃",
+        "description": "精选薏米和红豆，现磨成粉",
+        "rating": 4.8,
+        "salesCount": "7800+",
+        "shopName": "五谷养生专营店",
+        "taobaoLink": "https://s.taobao.com/search?q=薏米红豆粉",
+        "image": "/src/assets/products/yimi-hongdou.jpg",
+        "tags": ["祛湿", "消肿", "健脾"],
+        "specifications": [
+          "规格：500g装",
+          "成分：薏米、红豆、茯苓粉",
+          "用法：温水冲调食用"
+        ]
+      }
+    ],
+    "shi_re": [
+      {
+        "id": "sr_001",
+        "name": "蒲公英茶",
+        "category": "tea",
+        "price": "25.80",
+        "originalPrice": "32.00",
+        "reason": "清热解毒，利湿通淋",
+        "description": "野生蒲公英，自然晾晒",
+        "rating": 4.6,
+        "salesCount": "5600+",
+        "shopName": "野生草本专营",
+        "taobaoLink": "https://s.taobao.com/search?q=蒲公英茶+野生",
+        "image": "/src/assets/products/pugongying.jpg",
+        "tags": ["清热", "解毒", "利湿"],
+        "specifications": [
+          "规格：50g装",
+          "产地：长白山野生",
+          "用法：沸水冲泡3-5分钟"
+        ]
+      },
+      {
+        "id": "sr_002",
+        "name": "绿豆薏米粥",
+        "category": "health_food",
+        "price": "18.90",
+        "originalPrice": "25.00",
+        "reason": "清热利湿，消暑解毒",
+        "description": "即食粥品，方便快捷",
+        "rating": 4.5,
+        "salesCount": "3400+",
+        "shopName": "健康粥品专营",
+        "taobaoLink": "https://s.taobao.com/search?q=绿豆薏米粥",
+        "image": "/src/assets/products/lvdou-zhou.jpg",
+        "tags": ["清热", "利湿", "消暑"],
+        "specifications": [
+          "规格：350g×6罐",
+          "成分：绿豆、薏米、大米",
+          "用法：开罐即食或加热食用"
+        ]
+      }
+    ],
+    "xue_yu": [
+      {
+        "id": "xy_001",
+        "name": "山楂丹参茶",
+        "category": "tea",
+        "price": "42.00",
+        "originalPrice": "55.00",
+        "reason": "活血化瘀，行气消食",
+        "description": "山楂配丹参，活血化瘀佳品",
+        "rating": 4.7,
+        "salesCount": "2800+",
+        "shopName": "中药养生茶专营",
+        "taobaoLink": "https://s.taobao.com/search?q=山楂丹参茶",
+        "image": "/src/assets/products/shanzha-tea.jpg",
+        "tags": ["活血", "化瘀", "消食"],
+        "specifications": [
+          "规格：3g×30包",
+          "成分：山楂、丹参、红花",
+          "用法：沸水冲泡8分钟饮用"
+        ]
+      }
+    ],
+    "qi_yu": [
+      {
+        "id": "qy_001",
+        "name": "玫瑰花茶",
+        "category": "tea",
+        "price": "35.00",
+        "originalPrice": "45.00",
+        "reason": "疏肝理气，解郁安神",
+        "description": "新疆和田玫瑰，花香浓郁",
+        "rating": 4.8,
+        "salesCount": "6200+",
+        "shopName": "新疆花茶专营",
+        "taobaoLink": "https://s.taobao.com/search?q=玫瑰花茶+新疆",
+        "image": "/src/assets/products/meigui-tea.jpg",
+        "tags": ["疏肝", "理气", "解郁"],
+        "specifications": [
+          "规格：50g装",
+          "产地：新疆和田",
+          "用法：热水冲泡5分钟饮用"
+        ]
+      }
+    ],
+    "te_bing": [
+      {
+        "id": "tb_001",
+        "name": "蜂胶软胶囊",
+        "category": "supplements",
+        "price": "68.00",
+        "originalPrice": "88.00",
+        "reason": "增强免疫力，抗过敏",
+        "description": "天然蜂胶提取，增强体质",
+        "rating": 4.6,
+        "salesCount": "3100+",
+        "shopName": "蜂产品专营店",
+        "taobaoLink": "https://s.taobao.com/search?q=蜂胶软胶囊",
+        "image": "/src/assets/products/fengjiao.jpg",
+        "tags": ["增强免疫", "抗过敏", "天然"],
+        "specifications": [
+          "规格：0.5g×100粒",
+          "主要成分：蜂胶提取物",
+          "用法：每日2次，每次2粒"
+        ]
+      }
+    ]
+  },
+  "hotProducts": [
+    {
+      "id": "hot_001",
+      "name": "九种体质调理茶包",
+      "category": "tea",
+      "price": "88.00",
+      "originalPrice": "128.00",
+      "reason": "针对不同体质，个性化调理",
+      "description": "根据中医体质理论配制的复方茶包",
+      "rating": 4.9,
+      "salesCount": "1.8万+",
+      "shopName": "中医养生专营店",
+      "taobaoLink": "https://s.taobao.com/search?q=九种体质调理茶",
+      "image": "/src/assets/products/jiuzhong-tea.jpg",
+      "tags": ["体质调理", "个性化", "复方"],
+      "specifications": [
+        "规格：9种茶包各10袋",
+        "成分：根据体质特点精心配制",
+        "用法：根据体质选择相应茶包饮用"
+      ]
+    },
+    {
+      "id": "hot_002",
+      "name": "舌诊养生套装",
+      "category": "health_food",
+      "price": "168.00",
+      "originalPrice": "228.00",
+      "reason": "舌诊指导下的养生产品组合",
+      "description": "包含多种体质调理产品",
+      "rating": 4.8,
+      "salesCount": "5600+",
+      "shopName": "中医体质调理专营",
+      "taobaoLink": "https://s.taobao.com/search?q=舌诊养生套装",
+      "image": "/src/assets/products/yangsheng-set.jpg",
+      "tags": ["舌诊", "养生", "套装"],
+      "specifications": [
+        "套装内容：体质茶+调理丸+养生粉",
+        "适用：各种体质人群",
+        "用法：按说明书配合使用"
+      ]
+    }
+  ],
+  "brands": [
+    {
+      "id": "tongrentang",
+      "name": "同仁堂",
+      "logo": "/src/assets/brands/tongrentang.png",
+      "description": "创建于1669年，中药行业知名品牌"
+    },
+    {
+      "id": "kangmei",
+      "name": "康美药业",
+      "logo": "/src/assets/brands/kangmei.png", 
+      "description": "现代中药产业领军企业"
+    },
+    {
+      "id": "jiuzhitang",
+      "name": "九芝堂",
+      "logo": "/src/assets/brands/jiuzhitang.png",
+      "description": "拥有300多年历史的中华老字号"
+    }
+  ],
+  "discountInfo": {
+    "title": "限时优惠",
+    "description": "通过舌诊应用购买，享受专属优惠价格",
+    "discountRate": "8-9折",
+    "validUntil": "长期有效"
+  }
+}

@@ -1,0 +1,451 @@
+{
+  "testInfo": {
+    "title": "中医九种体质测试",
+    "description": "通过科学的问卷调查，了解您的体质类型，为健康管理提供指导",
+    "totalQuestions": 60,
+    "timeEstimate": "约需5-8分钟",
+    "instruction": "请根据您最近一年的身体状况和感受，选择最符合您情况的选项。每个问题都必须回答，没有标准答案，请诚实作答。"
+  },
+  "constitutionTypes": {
+    "ping_he": {
+      "name": "平和质",
+      "description": "阴阳气血调和，以体态适中、面色红润、精力充沛为主要特征",
+      "characteristics": ["精力充沛", "睡眠良好", "性格开朗", "社会适应能力强"],
+      "color": "#4CAF50"
+    },
+    "qi_xu": {
+      "name": "气虚质",
+      "description": "元气不足，以疲乏、气短、自汗等气虚表现为主要特征",
+      "characteristics": ["容易疲劳", "语声低怯", "容易感冒", "舌淡红"],
+      "color": "#FF9800"
+    },
+    "yang_xu": {
+      "name": "阳虚质", 
+      "description": "阳气不足，以畏寒怕冷、手足不温为主要特征",
+      "characteristics": ["畏寒怕冷", "手足不温", "喜热饮食", "精神不振"],
+      "color": "#2196F3"
+    },
+    "yin_xu": {
+      "name": "阴虚质",
+      "description": "阴液亏少，以口燥咽干、手足心热为主要特征", 
+      "characteristics": ["手足心热", "口燥咽干", "两颧潮红", "舌红少苔"],
+      "color": "#E91E63"
+    },
+    "tan_shi": {
+      "name": "痰湿质",
+      "description": "痰湿凝聚，以形体肥胖、腹部肥满、口黏苔腻为主要特征",
+      "characteristics": ["形体肥胖", "腹部肥满", "胸闷痰多", "舌苔白腻"],
+      "color": "#795548"
+    },
+    "shi_re": {
+      "name": "湿热质",
+      "description": "湿热内蕴，以面垢油腻、口苦、苔黄腻为主要特征",
+      "characteristics": ["面部油腻", "易生痤疮", "口苦口干", "舌苔黄腻"],
+      "color": "#FF5722"
+    },
+    "xue_yu": {
+      "name": "血瘀质", 
+      "description": "血行不畅，以肤色晦黯、舌质紫黯为主要特征",
+      "characteristics": ["肤色晦暗", "易有瘀斑", "口唇黯淡", "舌质紫暗"],
+      "color": "#9C27B0"
+    },
+    "qi_yu": {
+      "name": "气郁质",
+      "description": "气机郁滞，以神情抑郁、忧虑脆弱为主要特征",
+      "characteristics": ["多愁善感", "情绪不稳", "胸胁胀满", "舌淡红"],
+      "color": "#607D8B"
+    },
+    "te_bing": {
+      "name": "特禀质",
+      "description": "先天失常，以生理缺陷、过敏反应为主要特征",
+      "characteristics": ["过敏体质", "遗传缺陷", "胎传异常", "适应能力差"],
+      "color": "#FF6B6B"
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "category": "qi_xu",
+      "question": "您平时说话声音低弱无力吗？",
+      "options": [
+        { "text": "没有（完全不符合）", "score": 1 },
+        { "text": "很少（基本不符合）", "score": 2 },
+        { "text": "有些（符合一部分）", "score": 3 },
+        { "text": "相当（大部分符合）", "score": 4 },
+        { "text": "非常（完全符合）", "score": 5 }
+      ]
+    },
+    {
+      "id": 2,
+      "category": "qi_xu",
+      "question": "您容易疲乏吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 3,
+      "category": "qi_xu",
+      "question": "您容易感到气短（呼吸短促，接不上气）吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 4,
+      "category": "qi_xu", 
+      "question": "您容易心慌吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 5,
+      "category": "qi_xu",
+      "question": "您容易头晕或站起时眩晕吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 6,
+      "category": "yang_xu",
+      "question": "您手脚发凉吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 7,
+      "category": "yang_xu",
+      "question": "您胃脘部、背部或腰膝部怕冷吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 8,
+      "category": "yang_xu",
+      "question": "您比别人耐受不了寒冷（冬天，空调房间）吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 9,
+      "category": "yang_xu",
+      "question": "您容易拉肚子吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 10,
+      "category": "yin_xu",
+      "question": "您手心、足心发热吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 11,
+      "category": "yin_xu",
+      "question": "您身体、脸上发热吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 12,
+      "category": "yin_xu",
+      "question": "您皮肤或口唇干吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 13,
+      "category": "yin_xu",
+      "question": "您口干咽燥吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 14,
+      "category": "yin_xu",
+      "question": "您容易失眠吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 15,
+      "category": "tan_shi",
+      "question": "您腹部肥满松软吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 16,
+      "category": "tan_shi",
+      "question": "您额头部位容易出汗吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 17,
+      "category": "tan_shi",
+      "question": "您胸闷或腹胀吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 18,
+      "category": "tan_shi",
+      "question": "您痰多，特别是喉咙总是有痰，咳不净吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 19,
+      "category": "shi_re",
+      "question": "您面部或鼻部油腻发亮吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 20,
+      "category": "shi_re",
+      "question": "您容易生痤疮或疮疖吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 21,
+      "category": "shi_re",
+      "question": "您感到口苦或嘴里有异味吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 22,
+      "category": "shi_re",
+      "question": "您大便黏滞不爽、有解不尽的感觉吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 23,
+      "category": "xue_yu",
+      "question": "您皮肤上容易出现青紫瘀斑（皮下出血）吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 24,
+      "category": "xue_yu",
+      "question": "您两颧部有细络血丝吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 25,
+      "category": "xue_yu",
+      "question": "您嘴唇颜色偏暗吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 26,
+      "category": "qi_yu",
+      "question": "您感到闷闷不乐、情绪低沉吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 27,
+      "category": "qi_yu",
+      "question": "您精神紧张、焦虑不安吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 28,
+      "category": "qi_yu",
+      "question": "您多愁善感、感情脆弱吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 29,
+      "category": "qi_yu",
+      "question": "您胁肋部或乳房胀痛吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 30,
+      "category": "te_bing",
+      "question": "您对药物、食物、气味、花粉、季节过敏吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 31,
+      "category": "te_bing",
+      "question": "您有家族遗传病史吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    },
+    {
+      "id": 32,
+      "category": "te_bing",
+      "question": "您对环境适应能力差吗？",
+      "options": [
+        { "text": "没有", "score": 1 },
+        { "text": "很少", "score": 2 },
+        { "text": "有些", "score": 3 },
+        { "text": "相当", "score": 4 },
+        { "text": "非常", "score": 5 }
+      ]
+    }
+  ]
+}
