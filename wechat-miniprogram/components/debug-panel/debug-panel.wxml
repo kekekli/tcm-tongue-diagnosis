@@ -1,0 +1,77 @@
+<!--components/debug-panel/debug-panel.wxml-->
+<view class="debug-panel" wx:if="{{showDebug}}">
+  <view class="debug-header">
+    <text class="debug-title">🔧 调试面板</text>
+    <button class="close-btn" bindtap="hideDebug">✕</button>
+  </view>
+  
+  <scroll-view class="debug-content" scroll-y>
+    <!-- API状态 -->
+    <view class="debug-section">
+      <view class="section-title">🌐 API状态</view>
+      <view class="status-item">
+        <text class="status-label">后端服务:</text>
+        <text class="status-value {{apiStatus.color}}">{{apiStatus.text}}</text>
+      </view>
+      <view class="status-item">
+        <text class="status-label">API地址:</text>
+        <text class="status-value">{{apiBase}}</text>
+      </view>
+      <button class="test-btn" bindtap="testAPI">测试连接</button>
+    </view>
+    
+    <!-- 页面信息 -->
+    <view class="debug-section">
+      <view class="section-title">📱 页面信息</view>
+      <view class="status-item">
+        <text class="status-label">当前页面:</text>
+        <text class="status-value">{{currentPage}}</text>
+      </view>
+      <view class="status-item">
+        <text class="status-label">页面栈深度:</text>
+        <text class="status-value">{{pageStack}}</text>
+      </view>
+    </view>
+    
+    <!-- 本地存储 -->
+    <view class="debug-section">
+      <view class="section-title">💾 本地存储</view>
+      <view class="status-item">
+        <text class="status-label">历史记录:</text>
+        <text class="status-value">{{storageInfo.reports}}条</text>
+      </view>
+      <button class="test-btn" bindtap="clearStorage">清理数据</button>
+    </view>
+    
+    <!-- 调试操作 -->
+    <view class="debug-section">
+      <view class="section-title">🧪 调试操作</view>
+      <button class="action-btn primary" bindtap="simulateAnalysis">模拟分析</button>
+      <button class="action-btn secondary" bindtap="showLogs">查看日志</button>
+      <button class="action-btn secondary" bindtap="exportLogs">导出日志</button>
+    </view>
+    
+    <!-- 日志输出 -->
+    <view class="debug-section" wx:if="{{logs.length > 0}}">
+      <view class="section-title">📋 调试日志</view>
+      <scroll-view class="log-container" scroll-y>
+        <view class="log-item {{item.level}}" wx:for="{{logs}}" wx:key="index">
+          <text class="log-time">{{item.time}}</text>
+          <text class="log-msg">{{item.message}}</text>
+        </view>
+      </scroll-view>
+      <button class="test-btn" bindtap="clearLogs">清理日志</button>
+    </view>
+  </scroll-view>
+  
+  <!-- 快速操作栏 -->
+  <view class="quick-actions">
+    <button class="quick-btn" bindtap="quickTest">快速测试</button>
+    <button class="quick-btn" bindtap="reloadPage">重新加载</button>
+  </view>
+</view>
+
+<!-- 调试触发按钮 -->
+<view class="debug-trigger" wx:if="{{!showDebug}}" bindtap="showDebug">
+  🔧
+</view>

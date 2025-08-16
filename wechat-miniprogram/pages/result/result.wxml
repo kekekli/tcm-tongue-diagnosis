@@ -1,0 +1,92 @@
+<!--pages/result/result.wxml-->
+<view class="container">
+  <!-- 头部标题 -->
+  <view class="header">
+    <view class="title">📋 分析结果</view>
+    <view class="subtitle">基于AI智能分析的舌诊报告</view>
+  </view>
+
+  <!-- 分析结果卡片 -->
+  <view class="card" wx:if="{{result}}">
+    <view class="card-title">🔍 舌象特征</view>
+    
+    <view class="result-section">
+      <view class="result-item">
+        <view class="result-label">舌质颜色:</view>
+        <view class="result-value">{{result.tongueBody.color}}</view>
+      </view>
+      
+      <view class="result-item">
+        <view class="result-label">舌质质地:</view>
+        <view class="result-value">{{result.tongueBody.texture}}</view>
+      </view>
+      
+      <view class="result-item">
+        <view class="result-label">舌苔颜色:</view>
+        <view class="result-value">{{result.coating.color}}</view>
+      </view>
+      
+      <view class="result-item">
+        <view class="result-label">舌苔厚薄:</view>
+        <view class="result-value">{{result.coating.thickness}}</view>
+      </view>
+    </view>
+
+    <!-- 体质判断 -->
+    <view class="constitution-section">
+      <view class="constitution-title">🏥 体质判断</view>
+      <view class="constitution-type">{{result.constitution.primary}}</view>
+      <view class="constitution-desc">根据舌象特征分析得出的主要体质类型</view>
+    </view>
+  </view>
+
+  <!-- 健康建议卡片 -->
+  <view class="card" wx:if="{{result.advice}}">
+    <view class="card-title">💡 健康建议</view>
+    <view class="advice-content">{{result.advice}}</view>
+  </view>
+
+  <!-- 推荐产品卡片 -->
+  <view class="card" wx:if="{{result.products && result.products.length > 0}}">
+    <view class="card-title">🛒 推荐产品</view>
+    <view class="product-list">
+      <view class="product-card" wx:for="{{result.products}}" wx:key="id" bindtap="onProductTap" data-product="{{item}}">
+        <view class="product-header">
+          <view class="product-name">{{item.name}}</view>
+          <view class="product-price">¥{{item.price}}</view>
+        </view>
+        <view class="product-reason">{{item.reason}}</view>
+        <view class="product-rating">
+          <text class="rating-stars">★★★★★</text>
+          <text class="rating-text">{{item.rating}} ({{item.sales_count}})</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 注意事项 -->
+  <view class="card">
+    <view class="card-title">⚠️ 注意事项</view>
+    <view class="notice-list">
+      <view class="notice-item">• 本分析结果仅供参考，不能替代医生诊断</view>
+      <view class="notice-item">• 如有身体不适，请及时就医咨询专业医师</view>
+      <view class="notice-item">• 建议结合个人实际情况进行调理</view>
+      <view class="notice-item">• 产品选择需谨慎，建议咨询专业人士</view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons">
+    <button class="btn primary" bindtap="saveReport">📄 保存报告</button>
+    <button class="btn secondary" bindtap="shareReport">📤 分享报告</button>
+    <button class="btn secondary" bindtap="newAnalysis">🔍 重新分析</button>
+  </view>
+
+  <!-- 空状态 -->
+  <view class="empty-state" wx:if="{{!result}}">
+    <view class="empty-icon">📭</view>
+    <view class="empty-text">暂无分析结果</view>
+    <view class="empty-hint">请先进行舌诊分析</view>
+    <button class="btn primary" bindtap="goToAnalysis">开始分析</button>
+  </view>
+</view>

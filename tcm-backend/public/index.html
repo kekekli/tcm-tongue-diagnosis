@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中医舌诊助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .api-status {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-dot.online {
+            background: #4CAF50;
+        }
+
+        .status-dot.offline {
+            background: #f44336;
+        }
+
+        .api-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+        }
+
+        .endpoint {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .endpoint:last-child {
+            border-bottom: none;
+        }
+
+        .method {
+            background: #007bff;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .method.post {
+            background: #28a745;
+        }
+
+        .camera-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 12px;
+            padding: 40px 20px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-area:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: #999;
+            margin-bottom: 16px;
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 8px;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .btn.secondary {
+            background: #6c757d;
+        }
+
+        .analysis-result {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-top: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .constitution {
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .suggestions {
+            margin-top: 20px;
+        }
+
+        .suggestions ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .suggestions li {
+            background: #f8f9fa;
+            padding: 8px 12px;
+            margin: 8px 0;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 16px 0;
+            display: none;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 6px;
+            margin: 16px 0;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .endpoint {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌿 中医舌诊助手</h1>
+            <p>AI智能分析，个性化健康建议</p>
+        </div>
+
+        <!-- API状态显示 -->
+        <div class="api-status">
+            <h3>🔧 API服务状态</h3>
+            <div class="status-indicator">
+                <div class="status-dot" id="status-dot"></div>
+                <span id="status-text">正在检查服务状态...</span>
+            </div>
+            
+            <div class="api-info" id="api-info" style="display: none;">
+                <h4>可用接口：</h4>
+                <div class="endpoint">
+                    <span><span class="method">GET</span> /api/health</span>
+                    <span>健康检查</span>
+                </div>
+                <div class="endpoint">
+                    <span><span class="method post">POST</span> /api/diagnosis/analyze</span>
+                    <span>舌诊分析</span>
+                </div>
+                <div class="endpoint">
+                    <span><span class="method">GET</span> /api/products/hot</span>
+                    <span>热门产品</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 舌诊分析区域 -->
+        <div class="camera-section">
+            <h3>📸 舌诊分析</h3>
+            <p>上传舌头照片，获取AI智能分析结果</p>
+
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📷</div>
+                <p>点击选择图片或拖拽图片到此处</p>
+                <p style="color: #999; font-size: 0.9rem;">支持 JPG, PNG 格式，最大 10MB</p>
+            </div>
+
+            <input type="file" id="imageInput" accept="image/*" style="display: none;">
+            
+            <div>
+                <button class="btn" onclick="selectImage()">选择图片</button>
+                <button class="btn" onclick="startCamera()">开启摄像头</button>
+            </div>
+
+            <!-- 图片预览 -->
+            <div id="imagePreview" style="display: none; margin: 20px 0;">
+                <img id="previewImg" style="max-width: 100%; max-height: 300px; border-radius: 8px;">
+                <br>
+                <button class="btn" onclick="analyzeImage()">开始分析</button>
+                <button class="btn secondary" onclick="clearImage()">重新选择</button>
+            </div>
+
+            <!-- 加载状态 -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>AI正在分析您的舌象，请稍候...</p>
+            </div>
+
+            <!-- 错误提示 -->
+            <div class="error" id="error"></div>
+            <div class="success" id="success"></div>
+        </div>
+
+        <!-- 分析结果 -->
+        <div class="analysis-result" id="analysisResult">
+            <h3>📋 分析结果</h3>
+            <div id="resultContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let selectedImage = null;
+        const API_BASE = 'http://localhost:3002/api';
+
+        // 页面加载时检查API状态
+        window.onload = function() {
+            checkAPIStatus();
+            setupUploadArea();
+        };
+
+        // 检查API服务状态
+        async function checkAPIStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/health`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('status-dot').className = 'status-dot online';
+                    document.getElementById('status-text').textContent = `API服务正常运行 (端口: ${data.port})`;
+                    document.getElementById('api-info').style.display = 'block';
+                    showSuccess('API服务连接成功');
+                } else {
+                    throw new Error('API返回错误');
+                }
+            } catch (error) {
+                document.getElementById('status-dot').className = 'status-dot offline';
+                document.getElementById('status-text').textContent = 'API服务离线';
+                showError('无法连接到API服务，请确保后端服务正在运行');
+            }
+        }
+
+        // 设置上传区域
+        function setupUploadArea() {
+            const uploadArea = document.getElementById('uploadArea');
+            const imageInput = document.getElementById('imageInput');
+
+            uploadArea.addEventListener('click', () => imageInput.click());
+            
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                
+                const files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    handleImageSelect(files[0]);
+                }
+            });
+
+            imageInput.addEventListener('change', (e) => {
+                if (e.target.files.length > 0) {
+                    handleImageSelect(e.target.files[0]);
+                }
+            });
+        }
+
+        // 选择图片
+        function selectImage() {
+            document.getElementById('imageInput').click();
+        }
+
+        // 开启摄像头 (简化版)
+        function startCamera() {
+            alert('摄像头功能需要HTTPS环境，请使用"选择图片"功能上传舌诊照片');
+        }
+
+        // 处理图片选择
+        function handleImageSelect(file) {
+            if (!file.type.startsWith('image/')) {
+                showError('请选择图片文件');
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                showError('图片大小不能超过10MB');
+                return;
+            }
+
+            selectedImage = file;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('previewImg').src = e.target.result;
+                document.getElementById('imagePreview').style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 分析图片
+        async function analyzeImage() {
+            if (!selectedImage) {
+                showError('请先选择图片');
+                return;
+            }
+
+            showLoading(true);
+            clearMessages();
+
+            try {
+                // 将图片转换为base64
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    const imageData = e.target.result;
+                    
+                    const response = await fetch(`${API_BASE}/diagnosis/analyze`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            imageData: imageData
+                        })
+                    });
+
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        displayAnalysisResult(result.data);
+                        showSuccess('分析完成！');
+                    } else {
+                        throw new Error(result.message || '分析失败');
+                    }
+                };
+                reader.readAsDataURL(selectedImage);
+                
+            } catch (error) {
+                console.error('分析失败:', error);
+                showError('分析失败: ' + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // 显示分析结果
+        function displayAnalysisResult(data) {
+            const resultContent = document.getElementById('resultContent');
+            
+            resultContent.innerHTML = `
+                <div class="result-item">
+                    <span><strong>舌质:</strong></span>
+                    <span>${data.tongueBody.color}</span>
+                </div>
+                <div class="result-item">
+                    <span><strong>舌质质地:</strong></span>
+                    <span>${data.tongueBody.texture}</span>
+                </div>
+                <div class="result-item">
+                    <span><strong>舌苔颜色:</strong></span>
+                    <span>${data.coating.color}</span>
+                </div>
+                <div class="result-item">
+                    <span><strong>舌苔厚薄:</strong></span>
+                    <span>${data.coating.thickness}</span>
+                </div>
+                <div class="result-item">
+                    <span><strong>体质类型:</strong></span>
+                    <span class="constitution">${data.constitution.primary}</span>
+                </div>
+                
+                <div class="suggestions">
+                    <h4>💡 健康建议</h4>
+                    <ul>
+                        <li>${data.advice}</li>
+                    </ul>
+                </div>
+                
+                ${data.products && data.products.length > 0 ? `
+                <div class="suggestions">
+                    <h4>🛒 推荐产品</h4>
+                    <ul>
+                        ${data.products.map(product => 
+                            `<li><strong>${product.name}</strong> - ¥${product.price}<br>
+                            <small style="color: #666;">${product.reason}</small></li>`
+                        ).join('')}
+                    </ul>
+                </div>
+                ` : ''}
+            `;
+            
+            document.getElementById('analysisResult').style.display = 'block';
+            
+            // 滚动到结果区域
+            document.getElementById('analysisResult').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // 清除图片
+        function clearImage() {
+            selectedImage = null;
+            document.getElementById('imagePreview').style.display = 'none';
+            document.getElementById('analysisResult').style.display = 'none';
+            document.getElementById('imageInput').value = '';
+            clearMessages();
+        }
+
+        // 显示/隐藏加载状态
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        // 显示错误信息
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // 显示成功信息
+        function showSuccess(message) {
+            const successDiv = document.getElementById('success');
+            successDiv.textContent = message;
+            successDiv.style.display = 'block';
+            setTimeout(() => {
+                successDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // 清除所有消息
+        function clearMessages() {
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('success').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

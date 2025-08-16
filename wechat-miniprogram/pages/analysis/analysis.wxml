@@ -1,0 +1,75 @@
+<!--pages/analysis/analysis.wxml-->
+<view class="container">
+  <!-- 头部标题 -->
+  <view class="header">
+    <view class="title">📸 舌诊分析</view>
+    <view class="subtitle">请拍摄或选择清晰的舌头照片</view>
+  </view>
+
+  <!-- 拍照选择区域 -->
+  <view class="card" wx:if="{{!selectedImage && !analyzing}}">
+    <view class="upload-area" bindtap="chooseImage">
+      <view class="upload-icon">📷</view>
+      <view class="upload-text">点击选择图片</view>
+      <view class="upload-hint">支持相册选择或拍照</view>
+    </view>
+    
+    <view class="camera-buttons">
+      <button class="btn primary" bindtap="takePhoto">📸 拍照</button>
+      <button class="btn secondary" bindtap="chooseFromAlbum">🖼️ 从相册选择</button>
+    </view>
+    
+    <view class="tips">
+      <view class="tips-title">📋 拍照建议：</view>
+      <view class="tip-item">• 光线充足，避免阴影</view>
+      <view class="tip-item">• 舌头伸出，完整清晰</view>
+      <view class="tip-item">• 距离适中，填满画面</view>
+      <view class="tip-item">• 保持手机稳定</view>
+    </view>
+  </view>
+
+  <!-- 图片预览区域 -->
+  <view class="card" wx:if="{{selectedImage && !analyzing}}">
+    <view class="image-preview">
+      <image src="{{selectedImage}}" mode="aspectFit" class="preview-image"/>
+    </view>
+    
+    <view class="preview-actions">
+      <button class="btn primary" bindtap="startAnalysis">🔍 开始分析</button>
+      <button class="btn secondary" bindtap="reselect">🔄 重新选择</button>
+    </view>
+  </view>
+
+  <!-- 分析中状态 -->
+  <view class="card analyzing-card" wx:if="{{analyzing}}">
+    <view class="analyzing-content">
+      <view class="loading-icon"></view>
+      <view class="analyzing-text">AI正在分析您的舌象...</view>
+      <view class="analyzing-hint">请稍候，大约需要3-5秒</view>
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{progress}}%"></view>
+      </view>
+      <view class="progress-text">分析进度: {{progress}}%</view>
+    </view>
+    
+    <!-- 分析中的图片 -->
+    <view class="analyzing-image" wx:if="{{selectedImage}}">
+      <image src="{{selectedImage}}" mode="aspectFit" class="small-image"/>
+    </view>
+  </view>
+
+  <!-- 错误提示 -->
+  <view class="error" wx:if="{{errorMessage}}">
+    <view class="error-icon">❌</view>
+    <view class="error-text">{{errorMessage}}</view>
+    <button class="btn secondary" bindtap="retry">重试</button>
+  </view>
+
+  <!-- 分析完成后的导航 -->
+  <view class="card" wx:if="{{analysisComplete}}">
+    <view class="success-icon">✅</view>
+    <view class="success-text">分析完成！</view>
+    <button class="btn primary" bindtap="viewResult">查看分析结果</button>
+    <button class="btn secondary" bindtap="analyzeAgain">重新分析</button>
+  </view>
+</view>

@@ -1,0 +1,210 @@
+/* app.wxss - 全局样式 */
+page {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'Segoe UI', Arial, sans-serif;
+}
+
+.container {
+  padding: 20rpx;
+  min-height: 100vh;
+}
+
+/* 通用卡片样式 */
+.card {
+  background: #ffffff;
+  border-radius: 32rpx;
+  padding: 40rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 16rpx 64rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 按钮样式 */
+.btn {
+  background: #667eea;
+  color: white;
+  border: none;
+  padding: 24rpx 48rpx;
+  border-radius: 50rpx;
+  font-size: 32rpx;
+  margin: 16rpx;
+  text-align: center;
+}
+
+.btn:active {
+  background: #5a6fd8;
+  transform: scale(0.98);
+}
+
+.btn.secondary {
+  background: #6c757d;
+}
+
+.btn.danger {
+  background: #dc3545;
+}
+
+/* 标题样式 */
+.title {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: white;
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: rgba(255, 255, 255, 0.9);
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+/* 状态指示器 */
+.status-indicator {
+  display: flex;
+  align-items: center;
+  margin-bottom: 32rpx;
+}
+
+.status-dot {
+  width: 24rpx;
+  height: 24rpx;
+  border-radius: 50%;
+  margin-right: 16rpx;
+}
+
+.status-dot.online {
+  background: #4CAF50;
+}
+
+.status-dot.offline {
+  background: #f44336;
+}
+
+/* 列表样式 */
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.list-item:last-child {
+  border-bottom: none;
+}
+
+/* 结果样式 */
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 24rpx 0;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.constitution {
+  color: #667eea;
+  font-weight: bold;
+}
+
+.suggestions {
+  margin-top: 40rpx;
+}
+
+.suggestions-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 20rpx;
+  color: #333;
+}
+
+.suggestion-item {
+  background: #f8f9fa;
+  padding: 16rpx 24rpx;
+  margin: 16rpx 0;
+  border-radius: 12rpx;
+  border-left: 8rpx solid #667eea;
+}
+
+/* 产品卡片样式 */
+.product-card {
+  background: white;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin: 16rpx 0;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+}
+
+.product-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+}
+
+.product-price {
+  color: #667eea;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.product-reason {
+  color: #666;
+  font-size: 24rpx;
+  margin-top: 8rpx;
+}
+
+/* 加载动画 */
+.loading {
+  text-align: center;
+  padding: 80rpx;
+}
+
+.loading-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border: 8rpx solid #f3f3f3;
+  border-top: 8rpx solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 32rpx;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* 错误和成功提示 */
+.error {
+  background: #f8d7da;
+  color: #721c24;
+  padding: 24rpx;
+  border-radius: 12rpx;
+  margin: 32rpx 0;
+  text-align: center;
+}
+
+.success {
+  background: #d4edda;
+  color: #155724;
+  padding: 24rpx;
+  border-radius: 12rpx;
+  margin: 32rpx 0;
+  text-align: center;
+}
+
+/* 响应式适配 */
+@media (max-width: 750rpx) {
+  .container {
+    padding: 20rpx;
+  }
+  
+  .title {
+    font-size: 40rpx;
+  }
+  
+  .card {
+    padding: 32rpx;
+  }
+}

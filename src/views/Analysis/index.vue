@@ -109,7 +109,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { Toast } from 'vant'
-import { analyzeTongueImage } from '@/utils/analysis'
+import { analyzeTongueImage } from '@/api/index'
 import type { AnalysisResult } from '@/types/diagnosis'
 
 const router = useRouter()
@@ -204,11 +204,52 @@ const startAnalysis = async () => {
     tongueImage.value = imageUrl
     
     // 执行分析
-    const result = await analyzeTongueImage({
+    const response = await analyzeTongueImage({
       imageData: imageUrl
     })
     
-    analysisResult.value = result
+    if (response.success) {
+      // 转换后端数据格式到前端格式
+      analysisResult.value = {
+        tongueAnalysis: {
+          tongueQuality: {
+            color: response.data.tongueBody.color,
+            thickness: response.data.tongueBody.texture,
+            moisture: '润泽',
+            texture: '柔软'
+          },
+          tongueCoating: {
+            color: response.data.coating.color,
+            thickness: response.data.coating.thickness,
+            distribution: '均匀',
+            texture: '润滑'
+          },
+          tongueShape: {
+            size: '正常',
+            cracks: false,
+            teethMarks: false,
+            spots: false
+          }
+        },
+        constitution: [{
+          type: response.data.constitution.primary,
+          name: response.data.constitution.primary,
+          percentage: 85,
+          description: response.data.advice,
+          characteristics: []
+        }],
+        healthRisks: ['保持良好状态'],
+        recommendations: {
+          diet: ['均衡饮食', '适量运动'],
+          lifestyle: ['保持良好习惯', '定期体检'],
+          exercise: ['适度锻炼', '循序渐进'],
+          herbs: ['应季养生']
+        },
+        products: response.data.products || []
+      }
+    } else {
+      throw new Error(response.message || '分析失败')
+    }
     
     clearInterval(timer)
   } catch (err) {

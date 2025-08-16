@@ -1,0 +1,91 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 头部标题 -->
+  <view class="header">
+    <view class="title">🌿 中医舌诊助手</view>
+    <view class="subtitle">AI智能分析，个性化健康建议</view>
+  </view>
+
+  <!-- 欢迎介绍卡片 -->
+  <view class="card">
+    <view class="welcome-content">
+      <view class="welcome-title">🌸 欢迎使用中医舌诊助手</view>
+      <view class="welcome-desc">通过AI智能分析您的舌象特征，为您提供个性化的体质判断和健康建议</view>
+      <view class="quick-start">
+        <button class="btn primary-large" bindtap="goToAnalysis">
+          🔍 立即开始舌诊
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能介绍卡片 -->
+  <view class="card">
+    <view class="card-title">📸 主要功能</view>
+    <view class="feature-list">
+      <view class="feature-item">
+        <view class="feature-icon">🔍</view>
+        <view class="feature-content">
+          <view class="feature-name">智能舌诊分析</view>
+          <view class="feature-desc">AI识别舌质舌苔，精准分析体质</view>
+        </view>
+      </view>
+      
+      <view class="feature-item">
+        <view class="feature-icon">💊</view>
+        <view class="feature-content">
+          <view class="feature-name">个性化推荐</view>
+          <view class="feature-desc">根据体质特点推荐适合产品</view>
+        </view>
+      </view>
+      
+      <view class="feature-item">
+        <view class="feature-icon">📋</view>
+        <view class="feature-content">
+          <view class="feature-name">健康建议</view>
+          <view class="feature-desc">专业的生活方式和饮食建议</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 热门产品卡片 -->
+  <view class="card" wx:if="{{hotProducts.length > 0}}">
+    <view class="card-title">🔥 热门产品</view>
+    <view class="product-list">
+      <view class="product-item" wx:for="{{hotProducts}}" wx:key="id" bindtap="onProductTap" data-id="{{item.id}}">
+        <view class="product-name">{{item.name}}</view>
+        <view class="product-price">¥{{item.price}}</view>
+        <view class="product-reason">{{item.reason}}</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷操作 -->
+  <view class="quick-actions">
+    <view class="action-item" bindtap="goToAnalysis">
+      <view class="action-icon">🔍</view>
+      <view class="action-text">开始分析</view>
+    </view>
+    <view class="action-item" bindtap="viewHistory">
+      <view class="action-icon">📋</view>
+      <view class="action-text">历史记录</view>
+    </view>
+    <view class="action-item" bindtap="shareApp">
+      <view class="action-icon">📤</view>
+      <view class="action-text">分享给好友</view>
+    </view>
+  </view>
+
+  <!-- 使用说明 -->
+  <view class="card">
+    <view class="card-title">📖 使用说明</view>
+    <view class="instruction-list">
+      <view class="instruction-item">1. 点击"开始舌诊分析"进入拍照页面</view>
+      <view class="instruction-item">2. 拍摄或选择清晰的舌头照片</view>
+      <view class="instruction-item">3. 等待AI分析生成报告</view>
+      <view class="instruction-item">4. 查看详细的体质分析和健康建议</view>
+      <view class="instruction-item">5. 根据推荐选择合适的调理产品</view>
+    </view>
+  </view>
+</view>

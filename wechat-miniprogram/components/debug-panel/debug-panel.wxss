@@ -1,0 +1,190 @@
+/* components/debug-panel/debug-panel.wxss */
+
+.debug-panel {
+  position: fixed;
+  top: 20rpx;
+  right: 20rpx;
+  width: 600rpx;
+  max-height: 80vh;
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  border-radius: 16rpx;
+  z-index: 9999;
+  backdrop-filter: blur(10rpx);
+  border: 2rpx solid rgba(255, 255, 255, 0.2);
+}
+
+.debug-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx;
+  border-bottom: 2rpx solid rgba(255, 255, 255, 0.1);
+}
+
+.debug-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #00ff88;
+}
+
+.close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 60rpx;
+  height: 60rpx;
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.debug-content {
+  max-height: 60vh;
+  padding: 20rpx;
+}
+
+.debug-section {
+  margin-bottom: 40rpx;
+  padding: 20rpx;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12rpx;
+  border: 1rpx solid rgba(255, 255, 255, 0.1);
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #00ff88;
+  margin-bottom: 20rpx;
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12rpx 0;
+  border-bottom: 1rpx solid rgba(255, 255, 255, 0.05);
+}
+
+.status-item:last-child {
+  border-bottom: none;
+}
+
+.status-label {
+  font-size: 24rpx;
+  color: #ccc;
+}
+
+.status-value {
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.status-value.success {
+  color: #00ff88;
+}
+
+.status-value.error {
+  color: #ff4444;
+}
+
+.status-value.warning {
+  color: #ffaa00;
+}
+
+.test-btn, .action-btn, .quick-btn {
+  background: rgba(0, 255, 136, 0.2);
+  color: #00ff88;
+  border: 1rpx solid #00ff88;
+  border-radius: 8rpx;
+  padding: 16rpx 24rpx;
+  font-size: 24rpx;
+  margin: 8rpx 8rpx 8rpx 0;
+}
+
+.action-btn.primary {
+  background: #00ff88;
+  color: #000;
+}
+
+.action-btn.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.log-container {
+  max-height: 300rpx;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 8rpx;
+  padding: 16rpx;
+  margin: 16rpx 0;
+  border: 1rpx solid rgba(255, 255, 255, 0.1);
+}
+
+.log-item {
+  display: flex;
+  margin-bottom: 8rpx;
+  font-size: 22rpx;
+  line-height: 1.4;
+}
+
+.log-time {
+  color: #888;
+  margin-right: 16rpx;
+  flex-shrink: 0;
+}
+
+.log-msg {
+  flex: 1;
+}
+
+.log-item.success .log-msg {
+  color: #00ff88;
+}
+
+.log-item.error .log-msg {
+  color: #ff4444;
+}
+
+.log-item.warning .log-msg {
+  color: #ffaa00;
+}
+
+.log-item.info .log-msg {
+  color: #66ccff;
+}
+
+.quick-actions {
+  display: flex;
+  justify-content: space-around;
+  padding: 20rpx;
+  border-top: 2rpx solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.debug-trigger {
+  position: fixed;
+  bottom: 200rpx;
+  right: 40rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(0, 255, 136, 0.8);
+  color: #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40rpx;
+  z-index: 9998;
+  box-shadow: 0 8rpx 32rpx rgba(0, 255, 136, 0.3);
+  backdrop-filter: blur(10rpx);
+}
+
+.debug-trigger:active {
+  transform: scale(0.95);
+  background: rgba(0, 255, 136, 1);
+}
