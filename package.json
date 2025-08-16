@@ -4,15 +4,20 @@
   "description": "极简中医舌诊MVP - 拍照+分析+推荐",
   "main": "index.html",
   "scripts": {
-    "dev": "vite",
+    "start": "node server.js",
+    "dev": "node server.js",
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext .js,.vue,.ts",
     "format": "prettier --write src/**/*.{js,vue,ts,html,css}"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "dayjs": "^1.11.0",
+    "express": "^5.1.0",
     "pinia": "^2.1.0",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7",
     "vant": "^4.8.0",
     "vue": "^3.4.0",
     "vue-router": "^4.2.0"
