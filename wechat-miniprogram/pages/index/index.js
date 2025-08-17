@@ -6,8 +6,14 @@ Page({
   },
 
   onLoad() {
-    console.log('首页加载完成')
+    console.log('🚀 首页加载完成')
     this.loadHotProducts()
+    
+    // 检查事件绑定
+    console.log('📋 页面方法检查:')
+    console.log('- goToAnalysis:', typeof this.goToAnalysis)
+    console.log('- viewHistory:', typeof this.viewHistory)
+    console.log('- shareApp:', typeof this.shareApp)
   },
 
   onShow() {
@@ -37,9 +43,30 @@ Page({
 
   // 跳转到分析页面
   goToAnalysis() {
-    console.log('点击了舌诊分析按钮')
-    wx.navigateTo({
-      url: '/pages/analysis/analysis'
+    console.log('🔍 [TEST] 点击了舌诊分析按钮')
+    
+    // 先测试事件是否能触发
+    wx.showToast({
+      title: '按钮响应正常',
+      icon: 'success',
+      duration: 2000
+    })
+    
+    // 使用switchTab跳转到tabBar页面
+    wx.switchTab({
+      url: '/pages/analysis/analysis',
+      success: () => {
+        console.log('✅ [TEST] 跳转到分析页面成功')
+      },
+      fail: (err) => {
+        console.error('❌ [TEST] 跳转失败:', err)
+        wx.showModal({
+          title: '跳转失败',
+          content: `页面跳转失败\n${err.errMsg}`,
+          showCancel: false,
+          confirmText: '确定'
+        })
+      }
     })
   },
 

@@ -134,46 +134,43 @@ Page({
     // 模拟进度条
     this.simulateProgress()
 
-    // 将图片转换为base64
-    wx.getFileSystemManager().readFile({
-      filePath: this.data.selectedImage,
-      encoding: 'base64',
-      success: (res) => {
-        const imageData = 'data:image/jpeg;base64,' + res.data
-        
-        // 调用分析API
-        const app = getApp()
-        app.analyzeImage(imageData, (err, result) => {
-          this.setData({
-            analyzing: false,
-            progress: 100
-          })
+    // 直接使用图片路径进行AI分析
+    const app = getApp()
+    app.analyzeImage(this.data.selectedImage, (err, result) => {
+      this.setData({
+        analyzing: false,
+        progress: 100
+      })
 
-          if (err) {
-            this.setData({
-              errorMessage: err,
-              analysisComplete: false
-            })
-            return
-          }
-
-          // 分析成功
-          this.setData({
-            analysisResult: result,
-            analysisComplete: true
-          })
-
-          // 保存结果到全局数据
-          app.globalData.lastAnalysisResult = result
-        })
-      },
-      fail: (err) => {
-        console.error('读取图片文件失败:', err)
+      if (err) {
         this.setData({
-          analyzing: false,
-          errorMessage: '读取图片失败，请重试'
+          errorMessage: err,
+          analysisComplete: false
         })
+        return
       }
+
+      // 分析成功
+      this.setData({
+        analysisResult: result,
+        analysisComplete: true
+      })
+
+      // 保存结果到全局数据
+      app.globalData.lastAnalysisResult = result
+      
+      // 自动跳转到结果页面
+      wx.showToast({
+        title: 'AI分析完成',
+        icon: 'success',
+        duration: 2000
+      })
+      
+      setTimeout(() => {
+        wx.navigateTo({
+          url: '/pages/result/result'
+        })
+      }, 2000)
     })
   },
 

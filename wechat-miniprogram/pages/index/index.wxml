@@ -12,7 +12,7 @@
       <view class="welcome-title">🌸 欢迎使用中医舌诊助手</view>
       <view class="welcome-desc">通过AI智能分析您的舌象特征，为您提供个性化的体质判断和健康建议</view>
       <view class="quick-start">
-        <button class="btn primary-large" bindtap="goToAnalysis" style="position: relative; left: -1rpx; top: 2rpx">
+        <button class="btn primary-large" bindtap="goToAnalysis">
           🔍 立即开始舌诊
         </button>
       </view>

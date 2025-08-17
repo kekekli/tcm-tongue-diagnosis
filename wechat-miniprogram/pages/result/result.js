@@ -142,14 +142,14 @@ Page({
 
   // 重新分析
   newAnalysis() {
-    wx.navigateTo({
+    wx.switchTab({
       url: '/pages/analysis/analysis'
     })
   },
 
   // 跳转到分析页面
   goToAnalysis() {
-    wx.navigateTo({
+    wx.switchTab({
       url: '/pages/analysis/analysis'
     })
   },
