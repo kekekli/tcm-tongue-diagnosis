@@ -220,22 +220,6 @@
             text-align: left;
         }
         
-        .api-test {
-            margin-top: 20px;
-            text-align: left;
-        }
-        
-        .result {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 10px;
-            white-space: pre-wrap;
-            font-family: monospace;
-            font-size: 12px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
 
         @media (max-width: 480px) {
             .container {
@@ -294,7 +278,6 @@
         <div id="guestInterface" class="guest-actions">
             <a href="/auth.html" class="btn btn-large">👤 登录/注册</a>
             <div style="margin: 20px 0;">
-                <button class="btn btn-secondary" onclick="testAnalysis()">🔍 体验舌诊分析</button>
                 <button class="btn btn-secondary" onclick="testProducts()">🛒 查看产品推荐</button>
             </div>
         </div>
@@ -326,6 +309,20 @@
                 <h4>📈 数据统计</h4>
                 <button class="btn btn-admin" onclick="showStats()">📈 系统统计</button>
                 <button class="btn btn-admin" onclick="exportData()">📋 导出数据</button>
+                <button class="btn btn-admin" onclick="toggleDebugMode()">🐛 调试模式</button>
+            </div>
+        </div>
+
+        <!-- 管理员调试面板 -->
+        <div id="debugPanel" class="admin-actions" style="background: #f8f9fa; border-left-color: #6c757d;">
+            <div class="action-group">
+                <h4>🐛 开发者调试</h4>
+                <button class="btn btn-admin" onclick="testAnalysis()">🔍 测试舌诊分析</button>
+                <button class="btn btn-admin" onclick="clearDebugLog()">🗑️ 清空日志</button>
+            </div>
+            <div style="margin-top: 15px;">
+                <h5 style="margin: 0 0 10px 0; font-size: 12px; color: #666;">实时日志</h5>
+                <div id="debugLog" style="background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 10px; max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 11px; white-space: pre-wrap;"></div>
             </div>
         </div>
 
@@ -336,30 +333,52 @@
             <p>✅ 个性化调理建议</p>
             <p>✅ 产品推荐系统</p>
             <p>✅ 用户数据管理</p>
-            
-            <div class="api-test">
-                <h4>📋 测试日志</h4>
-                <div class="result" id="resultDiv"></div>
-            </div>
         </div>
     </div>
 
     <script>
-        const resultDiv = document.getElementById('resultDiv');
+        let debugMode = false;
         
         function log(message) {
-            console.log(message);
-            resultDiv.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
-            resultDiv.scrollTop = resultDiv.scrollHeight;
+            console.log('[TCM] ' + message);
+            
+            // 如果是调试模式且是管理员，显示在调试面板
+            if (debugMode) {
+                const debugLog = document.getElementById('debugLog');
+                if (debugLog) {
+                    debugLog.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+                    debugLog.scrollTop = debugLog.scrollHeight;
+                }
+            }
+        }
+        
+        // 切换调试模式
+        function toggleDebugMode() {
+            debugMode = !debugMode;
+            const debugPanel = document.getElementById('debugPanel');
+            if (debugMode) {
+                debugPanel.classList.add('show');
+                log('🐛 调试模式已开启');
+            } else {
+                debugPanel.classList.remove('show');
+                console.log('[TCM] 🐛 调试模式已关闭');
+            }
+        }
+        
+        // 清空调试日志
+        function clearDebugLog() {
+            const debugLog = document.getElementById('debugLog');
+            if (debugLog) {
+                debugLog.textContent = '';
+                log('🗑️ 调试日志已清空');
+            }
         }
         
         // 检查本地存储
         function checkLocalStorage() {
-            log('检查本地存储...');
             const token = localStorage.getItem('authToken');
             const userInfo = localStorage.getItem('userInfo');
-            log('用户信息: ' + (userInfo ? '已登录' : '未登录'));
-            log('令牌: ' + (token ? '存在' : '不存在'));
+            log('检查本地存储: ' + (userInfo ? '已登录' : '未登录'));
         }
         
         // 更新用户状态显示
@@ -390,9 +409,9 @@
                 if (user.role === 'admin') {
                     adminActions.classList.add('show');
                     log('✨ 管理员权限已激活');
+                } else {
+                    log('👤 用户已登录: ' + user.nickname);
                 }
-                
-                log('👤 用户已登录: ' + user.nickname);
             } else {
                 // 显示游客界面
                 userStatus.classList.remove('show');
@@ -556,8 +575,15 @@
             console.log('📱 页面加载完成');
             updateUserInterface();
             checkLocalStorage();
-            log('🎉 中医舌诊智能助手已就绪');
-            log('请使用上方功能按钮');
+            
+            // 只有管理员在调试模式下才显示就绪消息
+            const userInfo = localStorage.getItem('userInfo');
+            if (userInfo) {
+                const user = JSON.parse(userInfo);
+                if (user.role === 'admin') {
+                    log('🎉 中医舌诊智能助手已就绪');
+                }
+            }
         });
         
         // 监听存储变化
