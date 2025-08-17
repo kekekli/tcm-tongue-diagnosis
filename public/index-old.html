@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中医舌诊智能助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            cursor: pointer;
+            margin: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .status {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .api-test {
+            margin-top: 20px;
+            text-align: left;
+        }
+        
+        .result {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        
+        .user-status {
+            background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .user-status.show {
+            display: block;
+        }
+        
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🔍👅</div>
+        <h1>中医舌诊智能助手</h1>
+        <p class="subtitle">基于AI的中医舌诊分析系统</p>
+        
+        <!-- 用户状态显示 -->
+        <div id="userStatus" class="user-status"></div>
+        
+        <button class="btn" onclick="testAnalysis()">🔍 测试舌诊分析</button>
+        <button class="btn" onclick="testProducts()">🛒 查看产品推荐</button>
+        <button class="btn" id="authBtn" onclick="goToAuth()">👤 登录/注册</button>
+        <button class="btn" onclick="testAuthenticatedAPI()">🔐 测试认证API</button>
+        <button class="btn" onclick="checkHealth()">📊 系统健康检查</button>
+        
+        <div class="status">
+            <h3>🎯 核心功能</h3>
+            <p>✅ 舌象拍照分析</p>
+            <p>✅ 智能体质判断</p>
+            <p>✅ 个性化产品推荐</p>
+            <p>✅ 数据库持久化存储</p>
+        </div>
+        
+        <div class="api-test">
+            <h3>API测试面板</h3>
+            <div id="result" class="result">请点击上方按钮测试API功能...</div>
+        </div>
+    </div>
+
+    <script>
+        console.log('🔧 前端调试开始');
+        console.log('📱 中医舌诊智能助手已加载');
+        
+        const resultDiv = document.getElementById('result');
+        
+        function log(message) {
+            console.log(message);
+            resultDiv.textContent += new Date().toLocaleTimeString() + ': ' + message + '\n';
+            resultDiv.scrollTop = resultDiv.scrollHeight;
+        }
+        
+        // 检查本地存储
+        function checkLocalStorage() {
+            log('检查本地存储...');
+            log('用户信息: ' + (localStorage.getItem('user') || '无'));
+            log('令牌: ' + (localStorage.getItem('token') || '无'));
+            log('所有localStorage键: [' + Object.keys(localStorage).join(', ') + ']');
+        }
+        
+        // 测试健康检查API
+        async function checkHealth() {
+            log('正在检查系统健康状态...');
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                log('✅ 健康检查成功:');
+                log(JSON.stringify(data, null, 2));
+            } catch (error) {
+                log('❌ 健康检查失败: ' + error.message);
+            }
+        }
+        
+        // 测试舌诊分析API
+        async function testAnalysis() {
+            log('正在测试舌诊分析API...');
+            try {
+                const response = await fetch('/api/analysis/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        imageData: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...',
+                        userId: null
+                    })
+                });
+                const data = await response.json();
+                log('✅ 舌诊分析成功:');
+                log('体质类型: ' + data.data.analysis.constitution);
+                log('舌质: ' + data.data.analysis.tongueColor);
+                log('舌苔: ' + data.data.analysis.coatingType);
+                log('置信度: ' + data.data.analysis.confidence);
+                log('分析ID: ' + data.data.analysisId);
+                log('推荐产品数量: ' + (data.data.analysis.recommendations?.length || 0));
+            } catch (error) {
+                log('❌ 舌诊分析失败: ' + error.message);
+            }
+        }
+        
+        // 测试产品API
+        async function testProducts() {
+            log('正在测试产品查询API...');
+            try {
+                const response = await fetch('/api/products');
+                const data = await response.json();
+                log('✅ 产品查询成功:');
+                log('产品总数: ' + data.total);
+                data.data.forEach(product => {
+                    log(`- ${product.name}: ¥${product.price} (${product.constitution_match})`);
+                });
+            } catch (error) {
+                log('❌ 产品查询失败: ' + error.message);
+            }
+        }
+        
+        // 跳转到认证页面
+        function goToAuth() {
+            window.location.href = '/auth.html';
+        }
+        
+        // 退出登录
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userInfo');
+            updateUserStatus();
+            log('已退出登录');
+        }
+        
+        // 更新用户状态显示
+        function updateUserStatus() {
+            const token = localStorage.getItem('authToken');
+            const userInfo = localStorage.getItem('userInfo');
+            const userStatusDiv = document.getElementById('userStatus');
+            const authBtn = document.getElementById('authBtn');
+            
+            if (token && userInfo) {
+                const user = JSON.parse(userInfo);
+                userStatusDiv.innerHTML = `
+                    <div>👤 欢迎，${user.nickname || user.phone}</div>
+                    <div style="font-size: 12px; opacity: 0.8; margin-top: 5px;">
+                        分析次数: ${user.total_analysis_count} | 体质: ${user.constitution_type || '未知'}
+                        <button class="logout-btn" onclick="logout()">退出</button>
+                    </div>
+                `;
+                userStatusDiv.classList.add('show');
+                authBtn.style.display = 'none';
+            } else {
+                userStatusDiv.classList.remove('show');
+                authBtn.style.display = 'inline-block';
+            }
+        }
+        
+        // 测试需要认证的API
+        async function testAuthenticatedAPI() {
+            const token = localStorage.getItem('authToken');
+            const userInfo = localStorage.getItem('userInfo');
+            
+            if (!token) {
+                log('❌ 需要先登录才能测试认证API');
+                return;
+            }
+            
+            try {
+                const user = JSON.parse(userInfo);
+                log('正在测试获取用户分析历史...');
+                
+                const response = await fetch(`/api/analysis/history/${user.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    log('✅ 用户分析历史获取成功:');
+                    log(`总记录数: ${data.total}`);
+                    data.data.forEach(analysis => {
+                        log(`- ${analysis.created_at}: ${analysis.constitution_type} (${analysis.confidence_score})`);
+                    });
+                } else {
+                    log('❌ 获取分析历史失败: ' + data.message);
+                }
+            } catch (error) {
+                log('❌ 认证API测试失败: ' + error.message);
+            }
+        }
+
+        // 页面加载完成后的初始化
+        window.addEventListener('load', function() {
+            console.log('📱 页面加载完成');
+            updateUserStatus(); // 更新用户状态
+            checkLocalStorage();
+            log('🎉 中医舌诊智能助手已就绪');
+            log('请点击上方按钮测试各项功能');
+        });
+        
+        // 监听网络请求（如果支持）
+        if ('performance' in window && 'getEntriesByType' in performance) {
+            setInterval(() => {
+                const entries = performance.getEntriesByType('navigation');
+                if (entries.length > 0) {
+                    console.log('📡 网络性能:', entries[0]);
+                }
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

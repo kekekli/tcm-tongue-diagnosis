@@ -8,7 +8,7 @@ console.log('🔧 正在初始化数据库连接...');
 const sequelize = new Sequelize({
   dialect: 'sqlite',
   storage: path.join(__dirname, '../database.sqlite'), // 数据库文件位置
-  logging: console.log, // 显示SQL语句（开发环境）
+  logging: false, // 禁用SQL日志以减少输出
   define: {
     freezeTableName: true, // 禁用表名复数化
     underscored: true,     // 使用下划线命名
@@ -31,7 +31,8 @@ async function testConnection() {
 // 同步数据库表
 async function syncDatabase() {
   try {
-    await sequelize.sync({ alter: true });
+    // 使用force重建表结构（开发环境）
+    await sequelize.sync({ force: true });
     console.log('✅ 数据库表同步完成！');
     return true;
   } catch (error) {

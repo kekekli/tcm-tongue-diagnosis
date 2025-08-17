@@ -17,6 +17,16 @@ const User = sequelize.define('users', {
     unique: true,
     comment: '手机号'
   },
+  password: {
+    type: DataTypes.STRING(255),
+    allowNull: false,
+    comment: '加密后的密码'
+  },
+  email: {
+    type: DataTypes.STRING(100),
+    unique: true,
+    comment: '邮箱地址'
+  },
   nickname: {
     type: DataTypes.STRING(50),
     comment: '昵称'
@@ -46,6 +56,11 @@ const User = sequelize.define('users', {
     type: DataTypes.TINYINT,
     defaultValue: 1,
     comment: '状态：1-正常，0-禁用'
+  },
+  role: {
+    type: DataTypes.STRING(20),
+    defaultValue: 'user',
+    comment: '用户角色：user-普通用户，admin-管理员'
   }
 }, {
   tableName: 'users',

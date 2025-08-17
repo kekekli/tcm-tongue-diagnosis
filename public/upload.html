@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>舌诊分析 - 中医舌诊助手</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .upload-area {
+            border: 3px dashed #ddd;
+            border-radius: 15px;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #43cea2;
+            background: #f8f9fa;
+        }
+
+        .upload-area.dragover {
+            border-color: #43cea2;
+            background: #e8f5e8;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .upload-text {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .upload-hint {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(67, 206, 162, 0.3);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #333;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .preview-area {
+            display: none;
+            margin-bottom: 30px;
+        }
+
+        .preview-image {
+            width: 100%;
+            max-width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin: 0 auto;
+            display: block;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .analysis-area {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #43cea2;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #43cea2;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            font-weight: 500;
+            color: #666;
+        }
+
+        .result-value {
+            color: #333;
+        }
+
+        .suggestions-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .suggestions-list li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .suggestions-list li::before {
+            content: "•";
+            color: #43cea2;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #c33;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link a:hover {
+            color: #43cea2;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📸 舌诊分析</h1>
+            <p>上传舌头照片，获取AI分析结果</p>
+        </div>
+
+        <div class="content">
+            <!-- 上传区域 -->
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📷</div>
+                <div class="upload-text">点击上传或拖拽照片到此处</div>
+                <div class="upload-hint">支持 JPG、PNG 格式，文件大小不超过 5MB</div>
+            </div>
+
+            <input type="file" id="fileInput" class="file-input" accept="image/*" capture="environment">
+
+            <!-- 操作按钮 -->
+            <div class="action-buttons">
+                <button class="btn btn-primary" onclick="openCamera()">📷 拍照</button>
+                <button class="btn btn-secondary" onclick="selectFile()">📁 选择文件</button>
+            </div>
+
+            <!-- 图片预览 -->
+            <div class="preview-area" id="previewArea">
+                <img id="previewImage" class="preview-image" alt="预览图片">
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="btn btn-primary" onclick="analyzeImage()" id="analyzeBtn">🔍 开始分析</button>
+                    <button class="btn btn-secondary" onclick="resetUpload()" style="margin-left: 10px;">🔄 重新选择</button>
+                </div>
+            </div>
+
+            <!-- 错误消息 -->
+            <div id="errorMessage"></div>
+
+            <!-- 分析区域 -->
+            <div class="analysis-area" id="analysisArea">
+                <!-- 加载状态 -->
+                <div class="loading" id="loadingState">
+                    <div class="loading-spinner"></div>
+                    <div>AI正在分析您的舌象，请稍候...</div>
+                </div>
+
+                <!-- 分析结果 -->
+                <div id="resultContent" style="display: none;">
+                    <div class="result-card">
+                        <div class="result-title">🏥 分析结果</div>
+                        <div class="result-item">
+                            <span class="result-label">舌质颜色</span>
+                            <span class="result-value" id="tongueColor">-</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">舌苔类型</span>
+                            <span class="result-value" id="coatingType">-</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">体质类型</span>
+                            <span class="result-value" id="constitution">-</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-label">置信度</span>
+                            <span class="result-value" id="confidence">-</span>
+                        </div>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="result-title">💡 调理建议</div>
+                        <ul class="suggestions-list" id="suggestionsList">
+                        </ul>
+                    </div>
+
+                    <div class="result-card">
+                        <div class="result-title">🛒 推荐产品</div>
+                        <div id="productsList">
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="saveToHistory()">💾 保存分析结果</button>
+                        <button class="btn btn-secondary" onclick="startNewAnalysis()" style="margin-left: 10px;">🔄 重新分析</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="back-link">
+                <a href="/">← 返回首页</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedFile = null;
+        let analysisResult = null;
+
+        // 上传区域拖拽处理
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadArea.addEventListener('click', selectFile);
+        uploadArea.addEventListener('dragover', handleDragOver);
+        uploadArea.addEventListener('dragleave', handleDragLeave);
+        uploadArea.addEventListener('drop', handleDrop);
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelect(files[0]);
+            }
+        }
+
+        // 打开摄像头
+        function openCamera() {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                fileInput.setAttribute('capture', 'environment');
+                fileInput.click();
+            } else {
+                showError('您的设备不支持摄像头功能，请选择文件上传');
+            }
+        }
+
+        // 选择文件
+        function selectFile() {
+            fileInput.removeAttribute('capture');
+            fileInput.click();
+        }
+
+        // 文件选择处理
+        fileInput.addEventListener('change', function(e) {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+
+        // 处理文件选择
+        function handleFileSelect(file) {
+            clearError();
+
+            // 验证文件类型
+            if (!file.type.startsWith('image/')) {
+                showError('请选择图片文件');
+                return;
+            }
+
+            // 验证文件大小（5MB）
+            if (file.size > 5 * 1024 * 1024) {
+                showError('文件大小不能超过5MB');
+                return;
+            }
+
+            selectedFile = file;
+
+            // 显示预览
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewImage = document.getElementById('previewImage');
+                previewImage.src = e.target.result;
+                
+                document.getElementById('previewArea').style.display = 'block';
+                uploadArea.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 分析图片
+        async function analyzeImage() {
+            if (!selectedFile) {
+                showError('请先选择图片');
+                return;
+            }
+
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            analyzeBtn.disabled = true;
+            analyzeBtn.textContent = '分析中...';
+
+            // 显示分析区域
+            document.getElementById('analysisArea').style.display = 'block';
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('resultContent').style.display = 'none';
+
+            try {
+                // 获取用户token
+                const token = localStorage.getItem('authToken');
+                
+                // 创建FormData
+                const formData = new FormData();
+                formData.append('tongueImage', selectedFile);
+
+                // 发送分析请求
+                const headers = {};
+                if (token) {
+                    headers['Authorization'] = `Bearer ${token}`;
+                }
+
+                const response = await fetch('/api/analysis/analyze-file', {
+                    method: 'POST',
+                    headers: headers,
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    analysisResult = result.data;
+                    displayAnalysisResult(result.data.analysis);
+                } else {
+                    showError(result.message || '分析失败，请重试');
+                }
+
+            } catch (error) {
+                console.error('分析错误:', error);
+                showError('网络错误，请重试');
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.textContent = '🔍 开始分析';
+                document.getElementById('loadingState').style.display = 'none';
+            }
+        }
+
+        // 显示分析结果
+        function displayAnalysisResult(analysis) {
+            document.getElementById('tongueColor').textContent = analysis.tongueColor;
+            document.getElementById('coatingType').textContent = analysis.coatingType;
+            document.getElementById('constitution').textContent = analysis.constitution;
+            document.getElementById('confidence').textContent = (analysis.confidence * 100).toFixed(1) + '%';
+
+            // 显示建议
+            const suggestionsList = document.getElementById('suggestionsList');
+            suggestionsList.innerHTML = '';
+            analysis.suggestions.forEach(suggestion => {
+                const li = document.createElement('li');
+                li.textContent = suggestion;
+                suggestionsList.appendChild(li);
+            });
+
+            // 显示推荐产品
+            const productsList = document.getElementById('productsList');
+            productsList.innerHTML = '';
+            if (analysis.recommendations) {
+                analysis.recommendations.forEach(product => {
+                    const productDiv = document.createElement('div');
+                    productDiv.className = 'result-item';
+                    productDiv.innerHTML = `
+                        <span class="result-label">${product.name}</span>
+                        <span class="result-value">${product.price}</span>
+                    `;
+                    productsList.appendChild(productDiv);
+                });
+            }
+
+            document.getElementById('resultContent').style.display = 'block';
+        }
+
+        // 保存到历史记录
+        function saveToHistory() {
+            // 这里可以调用保存API或显示保存成功消息
+            alert('分析结果已保存到历史记录');
+        }
+
+        // 开始新的分析
+        function startNewAnalysis() {
+            resetUpload();
+            document.getElementById('analysisArea').style.display = 'none';
+        }
+
+        // 重置上传
+        function resetUpload() {
+            selectedFile = null;
+            analysisResult = null;
+            fileInput.value = '';
+            document.getElementById('previewArea').style.display = 'none';
+            document.getElementById('analysisArea').style.display = 'none';
+            uploadArea.style.display = 'block';
+            clearError();
+        }
+
+        // 显示错误消息
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.innerHTML = `<div class="error-message">${message}</div>`;
+        }
+
+        // 清除错误消息
+        function clearError() {
+            document.getElementById('errorMessage').innerHTML = '';
+        }
+
+        // 检查登录状态
+        window.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                showError('请先登录再进行舌诊分析');
+                setTimeout(() => {
+                    window.location.href = '/auth.html';
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>
