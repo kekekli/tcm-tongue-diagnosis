@@ -15,10 +15,12 @@ if ! command -v node &> /dev/null; then
     exit 1
 fi
 
-echo "📋 当前稳定版本信息："
+echo "📋 当前版本信息："
+echo "✅ 小程序版本: v1.5-stable (网络连接修复)"
+echo "✅ H5版本: v1.0-h5 (完整网页版)"
 echo "✅ 后端服务器: 端口3005"
-echo "✅ 小程序API: http://192.168.110.20:3005"
-echo "✅ 功能状态: 图片上传、舌诊分析、产品推荐正常"
+echo "✅ API地址: http://192.168.110.20:3005"
+echo "✅ 功能状态: 小程序、H5版本均正常"
 echo ""
 
 echo "启动选项："
@@ -40,11 +42,18 @@ case $choice in
         PORT=3005 node server.js
         ;;
     2)
-        echo "📊 版本信息："
-        echo "Git标签: $(git describe --tags --exact-match HEAD 2>/dev/null || echo 'v1.5-stable')"
+        echo "📊 详细版本信息："
+        echo "当前标签: $(git describe --tags --exact-match HEAD 2>/dev/null || echo '未在标签上')"
         echo "Commit: $(git rev-parse --short HEAD)"
         echo "分支: $(git branch --show-current)"
         echo "最后提交: $(git log -1 --format='%cd' --date=short)"
+        echo ""
+        echo "🏷️ 可用版本标签："
+        git tag -l | sort -V
+        echo ""
+        echo "📝 版本说明："
+        echo "• v1.5-stable: 小程序稳定版 (网络连接修复)"
+        echo "• v1.0-h5: H5网页版 (中医风格 + 相机功能)"
         ;;
     3)
         echo "🔧 打开微信开发者工具..."
