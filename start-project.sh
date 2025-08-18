@@ -1,79 +1,54 @@
 #!/bin/bash
 
-echo "🚀 中医舌诊MVP项目启动脚本"
-echo "=================================="
+echo "🚀 中医舌诊项目启动脚本 (v1.5-stable)"
+echo "========================================="
 
 # 检查是否在正确目录
-if [ ! -f "package.json" ]; then
+if [ ! -f "server.js" ]; then
     echo "❌ 请在项目根目录运行此脚本"
     exit 1
 fi
 
-echo "📋 启动选项："
-echo "1. 只启动前端 (端口3000)"
-echo "2. 只启动后端 (端口3001)" 
-echo "3. 同时启动前后端"
-echo "4. 初始化后端数据库"
+# 检查Node.js
+if ! command -v node &> /dev/null; then
+    echo "❌ 错误：未安装Node.js"
+    exit 1
+fi
 
-read -p "请选择 (1-4): " choice
+echo "📋 当前稳定版本信息："
+echo "✅ 后端服务器: 端口3005"
+echo "✅ 小程序API: http://192.168.110.20:3005"
+echo "✅ 功能状态: 图片上传、舌诊分析、产品推荐正常"
+echo ""
+
+echo "启动选项："
+echo "1. 启动后端服务器"
+echo "2. 查看版本信息"
+echo "3. 打开小程序开发工具"
+
+read -p "请选择 (1-3): " choice
 
 case $choice in
     1)
-        echo "🎨 启动前端开发服务器..."
-        npm run dev
+        echo "📡 启动后端服务器..."
+        echo "🌐 API地址: http://192.168.110.20:3005"
+        echo "📱 小程序项目: wechat-miniprogram/"
+        echo ""
+        echo "按 Ctrl+C 停止服务器"
+        echo "========================================="
+        PORT=3005 node server.js
         ;;
     2)
-        echo "🔧 启动后端API服务器..."
-        cd tcm-backend
-        if [ ! -d "node_modules" ]; then
-            echo "📦 安装后端依赖..."
-            npm install
-        fi
-        npm run dev
+        echo "📊 版本信息："
+        echo "Git标签: $(git describe --tags --exact-match HEAD 2>/dev/null || echo 'v1.5-stable')"
+        echo "Commit: $(git rev-parse --short HEAD)"
+        echo "分支: $(git branch --show-current)"
+        echo "最后提交: $(git log -1 --format='%cd' --date=short)"
         ;;
     3)
-        echo "🚀 同时启动前后端服务..."
-        
-        # 启动后端
-        cd tcm-backend
-        if [ ! -d "node_modules" ]; then
-            echo "📦 安装后端依赖..."
-            npm install
-        fi
-        npm run dev &
-        BACKEND_PID=$!
-        
-        # 等待后端启动
-        sleep 3
-        
-        # 启动前端
-        cd ..
-        npm run dev &
-        FRONTEND_PID=$!
-        
-        echo "✅ 前后端服务已启动"
-        echo "📱 前端地址: http://localhost:3000"
-        echo "🔗 后端地址: http://localhost:3001"
-        echo "📱 手机访问: http://192.168.0.51:3000"
-        echo ""
-        echo "按 Ctrl+C 停止所有服务"
-        
-        # 等待用户中断
-        trap "kill $BACKEND_PID $FRONTEND_PID; exit" INT
-        wait
-        ;;
-    4)
-        echo "🗄️  初始化数据库..."
-        cd tcm-backend
-        if [ ! -d "node_modules" ]; then
-            echo "📦 安装后端依赖..."
-            npm install
-        fi
-        
-        echo "⚠️  请确保MySQL服务已启动，并在 tcm-backend/.env 中配置了正确的数据库密码"
-        read -p "按回车键继续，或 Ctrl+C 取消..."
-        
-        npm run init-db
+        echo "🔧 打开微信开发者工具..."
+        open -a "wechatwebdevtools" "$(pwd)/wechat-miniprogram"
+        echo "✅ 微信开发者工具已启动"
         ;;
     *)
         echo "❌ 无效选择"
