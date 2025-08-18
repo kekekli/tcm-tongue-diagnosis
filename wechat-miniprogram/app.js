@@ -2,7 +2,7 @@
 App({
   globalData: {
     // API配置（微信小程序会自动选择合适的地址）
-    apiBase: 'http://192.168.0.51:3005/api',  // 开发环境使用
+    apiBase: 'http://192.168.110.20:3005/api',  // 开发环境使用
     // 开发环境使用: 'http://localhost:3005/api'
     userInfo: null
   },

@@ -14,22 +14,22 @@ if (isLocalhost) {
   // 切换为真机调试配置
   appJsContent = appJsContent.replace(
     'apiBase: \'http://localhost:3005/api\'',
-    'apiBase: \'http://192.168.0.51:3005/api\''
+    'apiBase: \'http://192.168.110.20:3005/api\''
   );
   appJsContent = appJsContent.replace(
-    '// 真机测试时需要手动修改为: \'http://192.168.0.51:3005/api\'',
+    '// 真机测试时需要手动修改为: \'http://192.168.110.20:3005/api\'',
     '// 开发环境使用: \'http://localhost:3005/api\''
   );
-  console.log('✅ 已切换为真机调试配置: http://192.168.0.51:3005/api');
+  console.log('✅ 已切换为真机调试配置: http://192.168.110.20:3005/api');
 } else {
   // 切换为本地开发配置
   appJsContent = appJsContent.replace(
-    'apiBase: \'http://192.168.0.51:3005/api\'',
+    'apiBase: \'http://192.168.110.20:3005/api\'',
     'apiBase: \'http://localhost:3005/api\''
   );
   appJsContent = appJsContent.replace(
     '// 开发环境使用: \'http://localhost:3005/api\'',
-    '// 真机测试时需要手动修改为: \'http://192.168.0.51:3005/api\''
+    '// 真机测试时需要手动修改为: \'http://192.168.110.20:3005/api\''
   );
   console.log('✅ 已切换为本地开发配置: http://localhost:3005/api');
 }

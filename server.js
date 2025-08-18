@@ -936,7 +936,7 @@ async function startServer() {
     }
     
     // 启动HTTP服务器
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log('\n🎉 ========== 中医舌诊助手启动成功 ==========');
       console.log(`📍 服务地址: http://localhost:${PORT}`);
       console.log(`💾 数据库: SQLite (database.sqlite)`);
