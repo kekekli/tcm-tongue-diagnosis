@@ -25,8 +25,9 @@ echo "启动选项："
 echo "1. 启动后端服务器"
 echo "2. 查看版本信息"
 echo "3. 打开小程序开发工具"
+echo "4. 打开H5版本"
 
-read -p "请选择 (1-3): " choice
+read -p "请选择 (1-4): " choice
 
 case $choice in
     1)
@@ -49,6 +50,14 @@ case $choice in
         echo "🔧 打开微信开发者工具..."
         open -a "wechatwebdevtools" "$(pwd)/wechat-miniprogram"
         echo "✅ 微信开发者工具已启动"
+        ;;
+    4)
+        echo "🌐 打开H5版本..."
+        echo "📱 基础版: http://192.168.110.20:3005/tongue-h5.html"
+        echo "📷 相机版: http://192.168.110.20:3005/tongue-camera.html"
+        echo "🏠 导航页: http://192.168.110.20:3005/h5-index.html"
+        open "http://192.168.110.20:3005/h5-index.html"
+        echo "✅ H5版本已在浏览器中打开"
         ;;
     *)
         echo "❌ 无效选择"

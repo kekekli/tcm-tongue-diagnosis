@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中医舌诊助手 - 相机版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .camera-container {
+            position: relative;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f0f0f0;
+        }
+
+        #video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        #canvas {
+            display: none;
+        }
+
+        .camera-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+        }
+
+        .guide-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            border: 3px dashed rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+        }
+
+        .guide-text {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 2px solid #e9ecef;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #56ab2f, #a8e6cf);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff416c, #ff4b2b);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .upload-option {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            border: 2px dashed #e0e0e0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .upload-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .upload-option input[type="file"] {
+            display: none;
+        }
+
+        .preview-container {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .preview-image {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .result {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .result-card {
+            background: #f8f9ff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .result-icon {
+            margin-right: 8px;
+        }
+
+        .result-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-label {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .result-value {
+            color: #666;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .products-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .product-price {
+            color: #e74c3c;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .product-reason {
+            color: #666;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
+
+        .product-link {
+            display: block;
+            background: #667eea;
+            color: white;
+            text-align: center;
+            padding: 8px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .error {
+            background: #fee;
+            border: 1px solid #fcc;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .camera-tips {
+            background: #e8f5e8;
+            border: 1px solid #c8e6c8;
+            color: #2e7d2e;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 13px;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .main-content {
+                padding: 15px;
+            }
+            
+            .header {
+                padding: 15px;
+            }
+            
+            .btn {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📱 中医舌诊助手</h1>
+            <p>拍照或上传舌头照片，获得AI分析</p>
+        </div>
+
+        <div class="main-content">
+            <!-- 相机容器 -->
+            <div class="camera-container" id="camera-container" style="display: none;">
+                <video id="video" autoplay playsinline></video>
+                <canvas id="canvas"></canvas>
+                <div class="camera-overlay">
+                    <div class="guide-circle"></div>
+                    <div class="guide-text">请将舌头置于圆圈中央</div>
+                </div>
+            </div>
+
+            <!-- 相机控制 -->
+            <div class="controls" id="camera-controls" style="display: none;">
+                <button class="btn btn-success" id="capture-btn">📷 拍照</button>
+                <button class="btn btn-danger" id="stop-camera-btn">❌ 关闭相机</button>
+            </div>
+
+            <!-- 预览图片 -->
+            <div class="preview-container" id="preview-container">
+                <img id="preview-image" class="preview-image" alt="预览图片" />
+            </div>
+
+            <!-- 操作选择 -->
+            <div id="action-buttons">
+                <button class="btn btn-primary" id="camera-btn">📷 打开相机拍照</button>
+                
+                <div class="upload-option" id="upload-option">
+                    <div>📁 或点击选择图片文件</div>
+                    <input type="file" id="file-input" accept="image/*" />
+                </div>
+            </div>
+
+            <!-- 分析控制 -->
+            <div id="analysis-controls" style="display: none;">
+                <button class="btn btn-primary" id="analyze-btn">🔬 开始AI分析</button>
+                <button class="btn btn-secondary" id="retake-btn">🔄 重新拍照</button>
+            </div>
+
+            <!-- 使用提示 -->
+            <div class="camera-tips">
+                <strong>📋 拍照提示：</strong><br>
+                • 张开嘴巴，充分露出舌头<br>
+                • 舌头伸出自然，不要过度用力<br>
+                • 确保光线充足，避免阴影<br>
+                • 舌头置于圆圈中央位置
+            </div>
+
+            <!-- 加载状态 -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>AI正在分析您的舌象...</p>
+            </div>
+
+            <!-- 分析结果 -->
+            <div class="result" id="result">
+                <div class="result-card">
+                    <div class="result-title">
+                        <span class="result-icon">🔬</span>
+                        舌象分析结果
+                    </div>
+                    <div id="analysis-content"></div>
+                </div>
+
+                <div class="result-card">
+                    <div class="result-title">
+                        <span class="result-icon">💊</span>
+                        推荐产品
+                    </div>
+                    <div class="products-grid" id="products-grid"></div>
+                </div>
+            </div>
+
+            <!-- 错误提示 -->
+            <div id="error-message"></div>
+        </div>
+    </div>
+
+    <script>
+        // API配置
+        const API_BASE = window.location.origin + '/api';
+        
+        // DOM元素
+        const cameraContainer = document.getElementById('camera-container');
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const cameraControls = document.getElementById('camera-controls');
+        const previewContainer = document.getElementById('preview-container');
+        const previewImage = document.getElementById('preview-image');
+        const actionButtons = document.getElementById('action-buttons');
+        const analysisControls = document.getElementById('analysis-controls');
+        const loading = document.getElementById('loading');
+        const result = document.getElementById('result');
+        const errorMessage = document.getElementById('error-message');
+
+        // 按钮
+        const cameraBtn = document.getElementById('camera-btn');
+        const captureBtn = document.getElementById('capture-btn');
+        const stopCameraBtn = document.getElementById('stop-camera-btn');
+        const analyzeBtn = document.getElementById('analyze-btn');
+        const retakeBtn = document.getElementById('retake-btn');
+        const uploadOption = document.getElementById('upload-option');
+        const fileInput = document.getElementById('file-input');
+
+        let stream = null;
+        let currentImageBlob = null;
+
+        // 初始化
+        function initApp() {
+            // 相机按钮
+            cameraBtn.addEventListener('click', startCamera);
+            captureBtn.addEventListener('click', capturePhoto);
+            stopCameraBtn.addEventListener('click', stopCamera);
+            
+            // 分析按钮
+            analyzeBtn.addEventListener('click', analyzeImage);
+            retakeBtn.addEventListener('click', resetToStart);
+            
+            // 文件上传
+            uploadOption.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFileSelect);
+
+            console.log('舌诊相机应用已启动');
+        }
+
+        // 启动相机
+        async function startCamera() {
+            try {
+                hideError();
+                
+                const constraints = {
+                    video: {
+                        facingMode: 'user', // 优先使用前置摄像头
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    }
+                };
+
+                stream = await navigator.mediaDevices.getUserMedia(constraints);
+                video.srcObject = stream;
+
+                // 显示相机界面
+                cameraContainer.style.display = 'block';
+                cameraControls.style.display = 'flex';
+                actionButtons.style.display = 'none';
+                previewContainer.style.display = 'none';
+                analysisControls.style.display = 'none';
+
+            } catch (error) {
+                console.error('相机启动失败:', error);
+                showError('无法启动相机，请检查权限设置或尝试上传文件');
+            }
+        }
+
+        // 停止相机
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            
+            cameraContainer.style.display = 'none';
+            cameraControls.style.display = 'none';
+            actionButtons.style.display = 'block';
+        }
+
+        // 拍照
+        function capturePhoto() {
+            const context = canvas.getContext('2d');
+            
+            // 设置canvas尺寸
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            
+            // 绘制视频帧到canvas
+            context.drawImage(video, 0, 0);
+            
+            // 转换为blob
+            canvas.toBlob(blob => {
+                currentImageBlob = blob;
+                
+                // 显示预览
+                const url = URL.createObjectURL(blob);
+                previewImage.src = url;
+                
+                // 更新UI
+                stopCamera();
+                previewContainer.style.display = 'block';
+                analysisControls.style.display = 'flex';
+            }, 'image/jpeg', 0.8);
+        }
+
+        // 处理文件选择
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    showError('请选择图片文件');
+                    return;
+                }
+
+                if (file.size > 5 * 1024 * 1024) {
+                    showError('图片大小不能超过5MB');
+                    return;
+                }
+
+                currentImageBlob = file;
+                
+                // 显示预览
+                const reader = new FileReader();
+                reader.onload = e => {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                    actionButtons.style.display = 'none';
+                    analysisControls.style.display = 'flex';
+                    hideError();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 分析图片
+        async function analyzeImage() {
+            if (!currentImageBlob) {
+                showError('请先拍照或选择图片');
+                return;
+            }
+
+            try {
+                showLoading(true);
+                hideError();
+                result.style.display = 'none';
+
+                // 创建FormData
+                const formData = new FormData();
+                formData.append('tongueImage', currentImageBlob, 'tongue.jpg');
+
+                // 调用API
+                const response = await fetch(`${API_BASE}/analysis/analyze-file`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayResults(data.data);
+                } else {
+                    showError(data.message || '分析失败');
+                }
+
+            } catch (error) {
+                console.error('分析错误:', error);
+                showError('分析失败，请检查网络连接');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // 显示结果
+        function displayResults(data) {
+            const analysis = data.analysis;
+            
+            // 分析结果
+            const analysisContent = document.getElementById('analysis-content');
+            analysisContent.innerHTML = `
+                <div class="result-item">
+                    <div class="result-label">舌质颜色</div>
+                    <div class="result-value">${analysis.tongueColor}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">舌苔类型</div>
+                    <div class="result-value">${analysis.coatingType}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">体质类型</div>
+                    <div class="result-value">${analysis.constitution}</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">置信度</div>
+                    <div class="result-value">${Math.round(analysis.confidence * 100)}%</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">健康建议</div>
+                    <div class="result-value">${analysis.suggestions.join('；')}</div>
+                </div>
+            `;
+
+            // 推荐产品
+            const productsGrid = document.getElementById('products-grid');
+            if (analysis.recommendations && analysis.recommendations.length > 0) {
+                productsGrid.innerHTML = analysis.recommendations.map(product => `
+                    <div class="product-card">
+                        <div class="product-name">${product.name}</div>
+                        <div class="product-price">${product.price}</div>
+                        <div class="product-reason">${product.reason}</div>
+                        <a href="${product.url}" target="_blank" class="product-link">查看详情</a>
+                    </div>
+                `).join('');
+            } else {
+                productsGrid.innerHTML = '<p style="text-align: center; color: #666;">暂无推荐产品</p>';
+            }
+
+            result.style.display = 'block';
+            result.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // 重新开始
+        function resetToStart() {
+            currentImageBlob = null;
+            previewContainer.style.display = 'none';
+            analysisControls.style.display = 'none';
+            actionButtons.style.display = 'block';
+            result.style.display = 'none';
+            fileInput.value = '';
+            hideError();
+        }
+
+        // 显示加载
+        function showLoading(show) {
+            loading.style.display = show ? 'block' : 'none';
+            analyzeBtn.disabled = show;
+        }
+
+        // 显示错误
+        function showError(message) {
+            errorMessage.innerHTML = `<div class="error">${message}</div>`;
+            errorMessage.style.display = 'block';
+        }
+
+        // 隐藏错误
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        // 页面加载完成
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        // 页面卸载时清理资源
+        window.addEventListener('beforeunload', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+    </script>
+</body>
+</html>
