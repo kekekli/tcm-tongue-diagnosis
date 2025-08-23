@@ -1,0 +1,58 @@
+<!--pages/privacy/privacy.wxml-->
+<view class="privacy-container">
+  <view class="header">
+    <text class="title">隐私保护指引</text>
+    <text class="subtitle">中医舌诊助手</text>
+  </view>
+
+  <scroll-view class="content" scroll-y="true">
+    <view class="section">
+      <text class="section-title">📋 信息收集说明</text>
+      <text class="section-content">
+为了给您提供专业的中医舌诊服务，我们需要收集以下信息：
+
+• 📷 相机权限：用于拍摄舌头照片进行AI分析
+• 🖼️ 相册权限：用于选择已有的舌头照片
+• 💾 本地存储：用于保存您的舌诊分析历史记录
+      </text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">🔒 信息安全承诺</text>
+      <text class="section-content">
+我们承诺：
+
+• 所有照片仅用于AI舌诊分析，不会用作其他用途
+• 您的个人信息将严格保密，不会泄露给第三方
+• 您可以随时删除本地保存的历史记录
+• 我们采用加密技术保护数据传输安全
+      </text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">⚖️ 您的权利</text>
+      <text class="section-content">
+您有权：
+
+• 随时撤销授权并停止使用相关功能
+• 查看和删除已保存的历史记录  
+• 要求我们删除您的相关数据
+• 对隐私政策有疑问时联系我们
+      </text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">📞 联系我们</text>
+      <text class="section-content">
+如有隐私相关问题，请联系我们：
+邮箱：privacy@tcm-app.com
+客服时间：周一至周五 9:00-18:00
+      </text>
+    </view>
+  </scroll-view>
+
+  <view class="footer">
+    <button class="btn-decline" bindtap="declinePrivacy">暂不使用</button>
+    <button class="btn-agree" bindtap="agreePrivacy">同意并继续</button>
+  </view>
+</view>

@@ -13,6 +13,34 @@ Page({
     console.log('分析页面加载成功')
   },
 
+  // 检查权限状态
+  checkAuthStatus() {
+    // 检查相机权限
+    wx.getSetting({
+      success: (res) => {
+        // 检查是否已同意隐私协议
+        const hasAgreedPrivacy = wx.getStorageSync('hasAgreedPrivacy')
+        if (!hasAgreedPrivacy) {
+          wx.showModal({
+            title: '隐私保护提示',
+            content: '为了提供舌诊服务，我们需要使用您的相机和相册权限。请查看隐私协议了解详情。',
+            confirmText: '查看协议',
+            cancelText: '暂不使用',
+            success: (modalRes) => {
+              if (modalRes.confirm) {
+                wx.navigateTo({
+                  url: '/pages/privacy/privacy'
+                })
+              }
+            }
+          })
+          return false
+        }
+        return true
+      }
+    })
+  },
+
   // 选择图片（通用方法）
   chooseImage() {
     wx.showActionSheet({
@@ -37,6 +65,13 @@ Page({
 
   // 拍照
   takePhoto() {
+    // 检查隐私协议
+    const hasAgreedPrivacy = wx.getStorageSync('hasAgreedPrivacy')
+    if (!hasAgreedPrivacy) {
+      this.checkAuthStatus()
+      return
+    }
+    
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],
@@ -72,6 +107,13 @@ Page({
 
   // 从相册选择
   chooseFromAlbum() {
+    // 检查隐私协议
+    const hasAgreedPrivacy = wx.getStorageSync('hasAgreedPrivacy')
+    if (!hasAgreedPrivacy) {
+      this.checkAuthStatus()
+      return
+    }
+    
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],

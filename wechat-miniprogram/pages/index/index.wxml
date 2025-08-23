@@ -71,6 +71,10 @@
       <view class="action-icon">📋</view>
       <view class="action-text">历史记录</view>
     </view>
+    <view class="action-item" bindtap="viewPrivacy">
+      <view class="action-icon">🔒</view>
+      <view class="action-text">隐私协议</view>
+    </view>
     <view class="action-item" bindtap="shareApp">
       <view class="action-icon">📤</view>
       <view class="action-text">分享给好友</view>

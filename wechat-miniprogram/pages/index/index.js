@@ -117,6 +117,13 @@ Page({
     })
   },
 
+  // 查看隐私协议
+  viewPrivacy() {
+    wx.navigateTo({
+      url: '/pages/privacy/privacy'
+    })
+  },
+
   // 产品点击事件
   onProductTap(e) {
     const productId = e.currentTarget.dataset.id
